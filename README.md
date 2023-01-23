@@ -1,0 +1,2 @@
+# PracticeJSCode
+Javascript learning environment
