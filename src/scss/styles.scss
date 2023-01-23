@@ -1,0 +1,157 @@
+// Import all of Bootstrap's CSS
+@import "~bootstrap/scss/bootstrap";
+@import "~vis-timeline/styles/vis-timeline-graph2d.css";
+@import "./jpn.css";
+@import 'highlight.js/styles/github.css';
+
+/* console */
+.mirror-console-log-row {
+    border-left: solid 10px #999;
+    line-height: 1.5;
+    white-space: pre;
+    // font-size: 16pt;
+}
+
+.mirror-console-log-normal::before {
+    content: "▶";
+    color: #ddd;
+    margin-right: 0.5em;
+}
+
+.mirror-console-log-error::before {
+    content: "✘";
+    color: #dd6964;
+    margin-right: 0.5em;
+}
+
+.mirror-console-log-info::before {
+    content: "▶";
+    color: #8ee386;
+    margin-right: 0.5em;
+}
+
+.mirror-console-log-warn::before {
+    content: "⚠";
+    color: #ffd080;
+    margin-right: 0.5em;
+}
+
+.mirror-console-log-return::before {
+    content: "◀";
+    color: #ddd;
+    margin-right: 0.5em;
+}
+
+h1 {
+    padding: 0.5em;
+    /*文字周りの余白*/
+    color: #010101;
+    /*文字色*/
+    background: #eaf3ff;
+    /*背景色*/
+    border-bottom: solid 3px #516ab6;
+    /*下線*/
+}
+
+h2 {
+    padding: 0.5em;
+    /*文字周りの余白*/
+    color: #010101;
+    /*文字色*/
+    background: #eaf3ff;
+    /*背景色*/
+    border-bottom: solid 2px #516ab6;
+    /*下線*/
+}
+
+h3 {
+    padding: 0.5em;
+    /*文字周りの余白*/
+    color: #010101;
+    /*文字色*/
+    background: #eaf3ff;
+    /*背景色*/
+    border-bottom: solid 1px #516ab6;
+    /*下線*/
+}
+
+h4, h5, h6 {
+    padding: 0.5em;
+    /*文字周りの余白*/
+    color: #010101;
+    /*文字色*/
+    background: #eaf3ff;
+    /*背景色*/
+}
+
+.runJsCode::after {
+    content: '実行';
+}
+
+
+.clrlog::after {
+    content: 'クリア';
+}
+
+.labelVischkbox::after {
+    content: 'タイムライン';
+}
+
+.labelSrcchkbox::after {
+    content: 'script';
+}
+
+.labelIviewchkbox::after {
+    content: 'View';
+}
+
+
+.toc {
+    // position: fixed;
+    // top: 0px;
+    // left: 1123px;
+    // width: 340px;
+    font-size: 0.75em;
+    background: inherit;
+    padding: 0;
+    white-space: nowrap;
+    overflow: scroll;
+    height: 100%;
+}
+
+.toc h2 {
+    color: initial;
+    background: inherit;
+    text-align: inherit;
+    // border-bottom: 1px #eee solid;
+    padding: 10px;
+}
+
+.toc h2::before {
+    position: initial;
+    // content: '';
+    // top: 100%;
+    // left: 0;
+    // border: none;
+    border-bottom: initial;
+    border-right: nitial;
+}
+
+.toc ul {
+    padding: 0 10px;
+}
+
+.toc li {
+    padding: 0 10px;
+}
+
+pre code[class^="language-"]:not([class="language-mermaid"]) {
+    width: 80%;
+    height: 10rem;
+    background-color: #eeeeee;
+    border-top: 1px solid #000000;
+    border-right: 1px solid #000000;
+    border-left: 3px solid #328BE9;
+    border-bottom: 1px solid #000000;
+}
+
