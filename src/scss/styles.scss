@@ -163,5 +163,10 @@ pre code[class^="language-"]:not([class="language-mermaid"]) {
     border-right: 1px solid #000000;
     border-left: 3px solid #328BE9;
     border-bottom: 1px solid #000000;
+    resize: vertical;
 }
 
+.cm-editor {
+    resize: vertical;
+    overflow: hidden;
+}
