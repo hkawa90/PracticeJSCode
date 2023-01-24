@@ -2,33 +2,31 @@
 <html lang="jp">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Practice JS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Practice JS</title>
 </head>
-
-<body>
-  <div class="container-fluid">
-    <div class="row flex-nowrap">
-      <div class="col-auto px-0">
-        <div id="sidebar" class="collapse collapse-horizontal show border-end toc" style="width: 15rem;">
-          <!-- TOC -->
-          <h2 class="border-bottom">目次</h2>
-          <ul class="list-unstyled ps-0" id="TOC"></ul>
+<div class="container-fluid overflow-hidden">
+    <div class="row vh-100 overflow-auto">
+        <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-light d-flex sticky-top">
+            <div
+                class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-dark">
+                <!-- TOC -->
+                <h2 class="border-bottom">目次</h2>
+                <ul class="list-unstyled ps-0" id="TOC"></ul>
+            </div>
         </div>
-      </div>
-      <main class="col ps-md-2 pt-2">
-        <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse"
-          class="border rounded-3 p-1 text-decoration-none"><i class="bi bi-list bi-lg py-2 p-1"></i> 目次</a>
-        <hr>
-        <div class="row">
-          <div class="col-12">
-            <div id="CONTENTS"></div>
-          </div>
+        <div class="col d-flex flex-column h-sm-100">
+            <main class="row overflow-auto">
+                <div class="col pt-4">
+                    <div id="CONTENTS"></div>
+                </div>
+            </main>
+            <footer class="row bg-light py-4 mt-auto">
+                <div class="col"> <a href="https://github.com/hkawa90/PracticeJSCode">Github</a> </div>
+            </footer>
         </div>
-      </main>
     </div>
-  </div>
 </div>
 <script src="./main.js"></script>
 </body>
