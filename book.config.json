@@ -1,7 +1,7 @@
 {
     "title": "Practice JS Coce",
     "chapters": [
-        { "file": "/1.md", "name" : "Marked文書"},
+        { "file": "/1.md", "name" : "README"},
         { "file": "/2.md", "name" : "Mermaid Example"},
         { "file": "/3.md", "name" : "JSコード実行サンプル"},
         { "file": "/4.md", "name" : "HTMLコード実行サンプル"}
