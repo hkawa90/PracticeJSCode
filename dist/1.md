@@ -14,14 +14,30 @@
 
 Demo site: [Practice JS Coce](https://hkawa90.github.io/PracticeJSCode/)
 
-## Build
+## Install
+
+1. Node.js インストール
+
+Node.jsを使っています。環境に合わせて[ダウンロード | Node.js](https://nodejs.org/ja/download/)からインストールします。
+
+2. yarnのインストール
+
+Package Managerの[Home | Yarn - Package Manager](https://yarnpkg.com/)使用しているので、[Installation | Yarn - Package Manager](https://yarnpkg.com/getting-started/install)を参考にインストールします。
+
+2. moduleのインストール
 
 ```shell
 yarn install
 ```
+
+## Build
+
+```shell
+yarn run build
+```
 ## 実行
 
-サンプル文書はdistファオルダにある。そのまま実行する場合は以下を実行してブラウザで開く。
+サンプル文書はdistファオルダにある。そのまま実行する場合は以下を実行してブラウザで開く。ブラウザでは`http://localhost:8080/`をオープンします。
 
 ```shell
 yarn run start
@@ -74,7 +90,37 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。
 
+コード実行させたいJavascript codeでは下記のように言語指定で`pjs`とします。
+
+````
+```pjs
+console.log(1)
+```
+````
+
+実行させたいHTMLでは下記のように言語指定で`phtml`とします。
+
+````
+```pjs
+console.log(1)
+```
+````
+mermaidで表示させたい場合は、下記のように言語指定で`mermaid`とします。
+
+````
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+````
+
+あとはMarkdownに従います。
+
 ## メモ
+
 * dist配下をgh-pagesにpushしてGithub Pagesで公開
 
 ```shell
@@ -90,3 +136,7 @@ git switch --orphan <new branch>
 git commit --allow-empty -m "Initial commit on orphan branch"
 git push -u origin <new branch>
 ```
+
+* Github:ファイルへのパーマリンクを取得する
+
+コミット SHA を手作業で探すのは不便ですが、ショートカットとして y を押すと、URL がパーマリンクのバージョンに自動で更新されます。 その後、URL をコピーし、共有すると、自分が表示したのとまったく同じものが表示されます。
