@@ -11,7 +11,10 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
 
     async function getBookInfo() {
         async function fetchData(file) {
-            const url = location.origin
+            const url = location.href
+            console.log('location:', location)
+            console.log('location:', window.location)
+            console.log('location:', document.location)
             let r = fetch(url + file)
                 .then((response) => {
                     if ((response) && (response.body)) {

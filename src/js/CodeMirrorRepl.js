@@ -169,6 +169,17 @@ export class CodeMirrorRepl {
                 }
                 repl.outputHolder.appendChild(repl.appendConsoleLine(args, 'normal'))
             },
+            error: function (...theArgs) {
+                let args = ""
+                for (const arg of theArgs) {
+                    try {
+                        args += arg.toString();
+                    } catch (_) {
+                        // do nothing
+                    }
+                }
+                repl.outputHolder.appendChild(repl.appendConsoleLine(args, 'error'))
+            },
             clear: function () {
                 repl.clearConsole()
             },
