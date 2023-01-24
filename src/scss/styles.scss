@@ -4,6 +4,16 @@
 @import "./jpn.css";
 @import 'highlight.js/styles/github.css';
 
+@media (min-width: 576px) {
+    .h-sm-100 {
+        height: 100%;
+    }
+}
+
+body {
+    background-color: #cce0cc
+}
+
 /* console */
 .mirror-console-log-row {
     border-left: solid 10px #999;
@@ -53,7 +63,7 @@ h1 {
     /*下線*/
 }
 
-h2 {
+h2:not(.border-bottom) {
     padding: 0.5em;
     /*文字周りの余白*/
     color: #010101;
@@ -147,7 +157,7 @@ h4, h5, h6 {
 
 pre code[class^="language-"]:not([class="language-mermaid"]) {
     width: 80%;
-    height: 10rem;
+    max-height: 15rem;
     background-color: #eeeeee;
     border-top: 1px solid #000000;
     border-right: 1px solid #000000;
