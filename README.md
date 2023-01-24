@@ -1,15 +1,31 @@
-# 誰のため
+# Practice JS Code
+
+![Practice JS Code](https://github.com/hkawa90/PracticeJSCode/blob/48bce8943681664e2ce3b5e79b1a5fbdf23fd045/dist/PracticsJSCode.png)
+
+## 誰のため
 
 将来の自分。もしくはJSの初心者のための反面教師として。
 
-# 何をするもの
+## 何をするもの
 
 記事や、自分のメモで書いたmarkdown文書内のサンプルコードだけでは理解しにくいことから、ブラウザ上でサンプルコードを実行できるようにして、その場で`console.log()`などで実行結果を確認。また時系列順に動作がわかるChartを表示できるようにしています。
 
-# Demo
+## Demo
 
-TODO:ここにリンク
+Demo site: [Practice JS Coce](https://hkawa90.github.io/PracticeJSCode/)
 
+## Build
+
+```shell
+yarn install
+```
+## 実行
+
+サンプル文書はdistファオルダにある。そのまま実行する場合は以下を実行してブラウザで開く。
+
+```shell
+yarn run start
+```
 ## 特徴
 
 markdown文書からWebページを生成します。fenced code blockのJavascriptをWebページで動作させて理解しやすくします。
@@ -52,7 +68,25 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 ### CodeMirrorRepl.js, context-eval.js
 
-ほぼ[azu/codemirror-console: Web Console UI for JavaScript.](https://github.com/azu/codemirror-console)と同じだが、CMを最新版のV6に変更.scrpt, moduleなどに加えて、HTMLコードを実行できるように変更している。consoleのlog(),info(),     warn(), error()に加えて、clear(),count(),countReset(),debug(),assert(),dir(),dirxml(),exception(),group(),groupCollapsed(),groupEnd(),profile(),profileEnd(),table(),time(),timeEnd(),timeStamp()を追加。
+ほぼ[azu/codemirror-console: Web Console UI for JavaScript.](https://github.com/azu/codemirror-console)と同じだが、CMを最新版のV6に変更.scrpt, moduleなどに加えて、HTMLコードを実行できるように変更している。consoleのlog(),info(), warn(), error()に加えて、clear(),count(),countReset(),debug(),assert(),dir(),dirxml(),exception(),group(),groupCollapsed(),groupEnd(),profile(),profileEnd(),table(),time(),timeEnd(),timeStamp()を追加。
 
-TODO:キャプチャ画像
+## 文書作成方法
 
+章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。
+
+## メモ
+* dist配下をgh-pagesにpushしてGithub Pagesで公開
+
+```shell
+$ git subtree push --prefix dist origin gh-pages
+```
+参考ページ：[Deploy to `gh-pages` from a `dist` folder on the master branch. Useful for use with \[yeoman\](http://yeoman.io).](https://gist.github.com/cobyism/4730490)
+
+* 空のブランチ作成
+- [ ] TODO:動作確認
+
+```shell
+git switch --orphan <new branch>
+git commit --allow-empty -m "Initial commit on orphan branch"
+git push -u origin <new branch>
+```
