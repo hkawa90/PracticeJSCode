@@ -1,6 +1,6 @@
-- [ ] sidebar fixed postion
+- [ ] スクロールに応じた見出しの強調 [スクロールスパイ～Bootstrap5設置ガイド](https://bootstrap-guide.com/components/scrollspy)
+    https://getbootstrap.jp/docs/5.0/components/scrollspy/
 - [ ] console collapse
-- [x] 目次 https://getbootstrap.jp/docs/5.0/helpers/text-truncation/
 
 - [x] ui
     - [x] Visualize Js output 
