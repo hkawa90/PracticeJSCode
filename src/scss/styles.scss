@@ -10,10 +10,17 @@
     }
 }
 
-body {
-    background-color: #cce0cc
+.bg-light {
+    background-color: #cce0cc !important;
 }
 
+body {
+    background-color: #cce0cc;
+}
+
+.form-check-label {
+    font-size: 1rem;
+}
 /* console */
 .mirror-console-log-row {
     border-left: solid 10px #999;
@@ -157,6 +164,7 @@ h4, h5, h6 {
 
 pre code[class^="language-"]:not([class="language-mermaid"]) {
     width: 80%;
+    min-height: 3rem;
     max-height: 15rem;
     background-color: #eeeeee;
     border-top: 1px solid #000000;
