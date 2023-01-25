@@ -101,8 +101,6 @@ export class CodeMirrorRepl {
         let editors = []
         const s = selectors || '[data-role="codeBlock"].language-javascript'
         const elements = document.querySelectorAll(s)
-        console.log('createEditorFromSelector:', lang)
-        console.log('createEditorFromSelector:', elements.length, ": ", elements)
         for (let cnt = 0; cnt < elements.length; cnt++) {
             editors.push(CodeMirrorRepl.createEditorFromElement(elements[cnt], lang))
         }
