@@ -47,7 +47,7 @@ yarn run start
 markdown文書からWebページを生成します。fenced code blockのJavascriptをWebページで動作させて理解しやすくします。
 
 * [jpn.css - Optimize typography in Japanese](https://kokushin.github.io/jpn.css/)を使用。
-* [azu/codemirror-console: Web Console UI for JavaScript.](https://github.com/azu/codemirror-console)を使用してJavascriptコードをWebページ上で実行。オリジナルはCM5を使用していたが、最新版のCM6を使って実装した。また一部誤りなどを修正して使用している。
+* [azu/codemirror-console: Web Console UI for JavaScript.](https://github.com/azu/codemirror-console)を使用してJavascriptコードをWebページ上で実行。オリジナルはCM5を使用していたが、最新版の[CodeMirror](https://codemirror.net/)を使って実装した。また一部誤りなどを修正して使用している。
 * [vis.js](https://visjs.org/)のTimelineを使って、fenced code blockのJSコードの動作を可視化。`console.tracing()`をコールしたときの情報を可視化している。
 * fenced code blockで[Mermaid | Diagramming and charting tool](https://mermaid.js.org/)でdiagram表示
 * CSSフレームワークの[Introduction · Bootstrap v5.0](https://getbootstrap.com/docs/5.0/getting-started/introduction/)を使用。Webページのレイアウトに[Bootstrap 5 Sidebar Examples - DEV Community 👩‍💻👨‍💻](https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb)を参考にした。
@@ -116,8 +116,41 @@ console.log(1)
 実行させたいHTMLでは下記のように言語指定で`phtml`とします。
 
 ````
-```pjs
-console.log(1)
+```phtml
+<head>
+	<!-- Load plotly.js into the DOM -->
+	<script src='https://cdn.plot.ly/plotly-2.17.1.min.js'></script>
+</head>
+
+<body>
+	<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+  <script>
+var size = 100, x = new Array(size), y = new Array(size), z = new Array(size), i, j;
+
+for(var i = 0; i < size; i++) {
+	x[i] = y[i] = -2 * Math.PI + 4 * Math.PI * i / size;
+  	z[i] = new Array(size);
+}
+
+for(var i = 0; i < size; i++) {
+  	for(j = 0; j < size; j++) {
+    	var r2 = x[i]*x[i] + y[j]*y[j];
+    	z[i][j] = Math.sin(x[i]) * Math.cos(y[j]) * Math.sin(r2) / Math.log(r2+1);
+ 	}
+}
+
+var data = [ {
+		z: z,
+		x: x,
+		y: y,
+		type: 'contour'
+	}
+];
+
+Plotly.newPlot('myDiv', data);
+
+  </script>
+</body>
 ```
 ````
 mermaidで表示させたい場合は、下記のように言語指定で`mermaid`とします。
