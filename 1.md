@@ -71,6 +71,7 @@ markdown文書からWebページを生成します。fenced code blockのJavascr
 ```json
 {
     "title": "タイトルだぞ",
+    "style": "custom.css",
     "chapters": [
         { "file": "/1.md", "name" : "第1章"},
         { "file": "/2.md", "name" : "第2章"},
@@ -88,7 +89,21 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 ## 文書作成方法
 
-章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。
+章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。styleを変更したい場合は、`style`にカスタムCSSファイルを指定できる。カスタムCSSファイルは通常のCSSファイルと同じ。
+
+`book.config.json`の例:
+```json
+{
+    "title": "Practice JS Coce",
+    "style": "/custom.css",
+    "chapters": [
+        { "file": "/1.md", "name" : "README"},
+        { "file": "/2.md", "name" : "Mermaid Example"},
+        { "file": "/3.md", "name" : "JSコード実行サンプル"},
+        { "file": "/4.md", "name" : "HTMLコード実行サンプル"}
+    ]
+}
+```
 
 コード実行させたいJavascript codeでは下記のように言語指定で`pjs`とします。
 
