@@ -12,9 +12,6 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
     async function getBookInfo() {
         async function fetchData(file) {
             const url = location.href
-            console.log('location:', location)
-            console.log('location:', window.location)
-            console.log('location:', document.location)
             let r = fetch(url + file)
                 .then((response) => {
                     if ((response) && (response.body)) {
@@ -45,9 +42,25 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
         }
         return bookInfo
     }
+    function loadCSS(css) {
+        if (css) {
+            const head = document.getElementsByTagName('head')[0];
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = css;
+            link.media = 'all';
+            head.appendChild(link);
+    
+        }
+    }
     const bookInfo = await getBookInfo()
     // parse markdown
     if (bookInfo) {
+        if (bookInfo.style) {
+            loadCSS(bookInfo.style)
+        }
+
         // set page title
         document.getElementsByTagName('title')[0].innerText = bookInfo.title
         for (let i = 0; i < bookInfo.chapters.length; i++) {
@@ -75,7 +88,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             const chap = document.createElement('button')
             chap.setAttribute('class', 'btn btn-toggle align-items-center rounded')
             chap.setAttribute('data-bs-toggle', 'collapse')
-            
+
             const secListHref = 'chap' + i + '-collapse'
             chap.setAttribute('data-bs-target', '#' + secListHref)
             chap.setAttribute('aria-expanded', 'true')
@@ -102,7 +115,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                         document.getElementById('chap-' + p + '-content').setAttribute('style', 'display:none')
                     }
                 }
-            })            
+            })
             chap.appendChild(chapText)
             toc.appendChild(chapLi)
             chapLi.appendChild(chap)

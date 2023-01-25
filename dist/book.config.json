@@ -1,5 +1,6 @@
 {
     "title": "Practice JS Coce",
+    "style": "custom.css",
     "chapters": [
         { "file": "/1.md", "name" : "README"},
         { "file": "/2.md", "name" : "Mermaid Example"},
