@@ -1,6 +1,8 @@
 {
     "title": "Practice JS Coce",
     "style": "custom.css",
+    "cmTheme" : "githubLight",
+    "cmTheme-comment" : "Codemirror theme name. default: sublime; See https://www.npmjs.com/package/@uiw/codemirror-themes-all",
     "chapters": [
         { "file": "/1.md", "name" : "README"},
         { "file": "/2.md", "name" : "Mermaid Example"},

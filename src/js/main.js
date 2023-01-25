@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     smartypants: false,
     xhtml: false
   }
-  await createDocFromMd(mdOptions)
-
+  const bookInfo = await createDocFromMd(mdOptions)
+  
   // JSコードを実行
-  CodeMirrorRepl.createEditorFromSelector('.language-pjs')
+  CodeMirrorRepl.createEditorFromSelector('.language-pjs', {lang: 'js', cmTheme: bookInfo.cmTheme})
   // HTMLのJSコードを実行
-  CodeMirrorRepl.createEditorFromSelector('.language-phtml', 'HTML')
+  CodeMirrorRepl.createEditorFromSelector('.language-phtml', {lang: 'HTML', cmTheme: bookInfo.cmTheme})
   // Event handling
   // window.addEventListener("repl-tracing", (event) => {
   // })

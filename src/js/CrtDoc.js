@@ -141,4 +141,5 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             }
         }
     }
+    return bookInfo
 }

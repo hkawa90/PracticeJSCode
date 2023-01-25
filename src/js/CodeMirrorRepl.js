@@ -12,6 +12,7 @@ import { DataSet, Timeline } from "vis-timeline/standalone";
 
 class PracticeEditor {
     constructor(options) {
+        const theme = options.cmTheme || "sublime"
         // options.lang
         const myTheme = EditorView.baseTheme({
             "&.cm-editor": {
@@ -26,12 +27,12 @@ class PracticeEditor {
         if (options.lang === 'js') {
             this.editorState = EditorState.create({
                 // doc: textarea.textContent,
-                extensions: [basicSetup, javascript(), themes['sublime'], myTheme]
+                extensions: [basicSetup, javascript(), themes[theme], myTheme]
             })
         } else { // html
             this.editorState = EditorState.create({
                 // doc: textarea.textContent,
-                extensions: [basicSetup, html(), themes['sublime'], myTheme]
+                extensions: [basicSetup, html(), themes[theme], myTheme]
             })
         }
         this.editorView = new EditorView({
@@ -97,17 +98,18 @@ export class CodeMirrorRepl {
         // for console function
         this.consoleCount = {}
     }
-    static createEditorFromSelector(selectors, lang = "js") {
+    static createEditorFromSelector(selectors, options) {
         let editors = []
         const s = selectors || '[data-role="codeBlock"].language-javascript'
         const elements = document.querySelectorAll(s)
         for (let cnt = 0; cnt < elements.length; cnt++) {
-            editors.push(CodeMirrorRepl.createEditorFromElement(elements[cnt], lang))
+            editors.push(CodeMirrorRepl.createEditorFromElement(elements[cnt], options))
         }
         return editors
     }
-    static createEditorFromElement(element, lang = "js") {
-        let repl = new CodeMirrorRepl({ lang: lang })
+    static createEditorFromElement(element, options) {
+
+        const repl = new CodeMirrorRepl(options)
         repl.editor.setText(element.textContent)
         repl.editor.getText()
         repl.editor.setReadOnly(false)
@@ -128,7 +130,7 @@ export class CodeMirrorRepl {
         label.setAttribute('class', 'labelVischkbox mt-1 form-check-label me-3')
         label.appendChild(repl.vis_chkbox)
 
-        if (lang === "js") {
+        if (repl.lang === "js") {
             repl.script_chkbox = document.createElement('input')
             repl.script_chkbox.setAttribute('type', 'checkbox')
             repl.script_chkbox.setAttribute('class', 'scrCheckbox form-check-input')
