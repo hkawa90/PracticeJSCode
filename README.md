@@ -114,7 +114,7 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 ## 文書作成方法
 
-章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。styleを変更したい場合は、`style`にカスタムCSSファイルを指定できる。カスタムCSSファイルは通常のCSSファイルと同じ。また同様に、`cmTheme`でCodeMirrorのthemeを設定できる。Theme名は[material](https://www.npmjs.com/package/@uiw/codemirror-themes-all)を参照。JSコードの実行に必要な外部スクリプトがある場合は、`extScript`に指定する。
+章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。styleを変更したい場合は、`style`にカスタムCSSファイルを指定できる。カスタムCSSファイルは通常のCSSファイルと同じ。また同様に、`cmTheme`でCodeMirrorのthemeを設定できる。Theme名は[material](https://www.npmjs.com/package/@uiw/codemirror-themes-all)を参照。JSコードの実行に必要な外部スクリプト(CDN)がある場合は、`extScript`に指定する。
 
 `book.config.json`の例:
 ```json
