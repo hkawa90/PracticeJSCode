@@ -178,3 +178,8 @@ pre code[class^="language-"]:not([class="language-mermaid"]) {
     resize: vertical;
     overflow: hidden;
 }
+
+iframe.repl-viewer {
+    width: 80%;
+    height: 10rem;
+}
