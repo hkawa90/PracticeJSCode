@@ -1,4 +1,6 @@
 //import { createContextEval } from 'codemirror-console/lib/context-eval'
+// Webpack5 for yaml-front-matter https://qiita.com/issei_k/items/f33164a22b8c1dc74a09
+
 import { createContextEval } from './context-eval'
 import { EditorView, basicSetup } from "codemirror"
 import { EditorState, Compartment } from "@codemirror/state"
@@ -9,6 +11,7 @@ import { sublimeInit } from '@uiw/codemirror-themes-all'
 import * as themes from '@uiw/codemirror-themes-all'
 import { repositionTooltips } from '@codemirror/view'
 import { DataSet, Timeline } from "vis-timeline/standalone";
+import { loadFront } from "yaml-front-matter"
 
 class PracticeEditor {
     constructor(options) {
@@ -89,6 +92,7 @@ class PracticeEditor {
 export class CodeMirrorRepl {
     constructor(options) {
         this.lang = options.lang || "js"
+        this.options = options
         this.editor = this.createEditor(options)
         this.runningEvalContext = undefined;
         this.timeSeriesLog = new DataSet()
@@ -134,6 +138,7 @@ export class CodeMirrorRepl {
             repl.script_chkbox = document.createElement('input')
             repl.script_chkbox.setAttribute('type', 'checkbox')
             repl.script_chkbox.setAttribute('class', 'scrCheckbox form-check-input')
+            repl.script_chkbox.checked = true
 
             repl.scrlabel = document.createElement('label')
             repl.scrlabel.setAttribute('class', 'labelSrcchkbox mt-1 form-check-label me-3')
@@ -274,12 +279,17 @@ export class CodeMirrorRepl {
         runBtn.addEventListener('click', () => {
             let option = {}
             if (repl.lang === "js") {
-                option = { type: repl.script_chkbox.checked ? "script" : "module", view: repl.iframeView_chkbox.checked }
+                option = {
+                    type: repl.script_chkbox.checked ? "script" : "module",
+                    view: repl.iframeView_chkbox.checked
+                }
             } else { // html
                 option = { type: "HTML", view: repl.iframeView_chkbox.checked }
             }
             repl.iframeHolder.setAttribute('style', '')
             option.embeddedElement = repl.iframeHolder
+            option.extScript = repl.options.extScript
+
             repl.runInContext({ console: consoleMock }, option).then((r) => {
                 if (repl.vis_chkbox.checked) {
                     let groups = new DataSet();
@@ -293,6 +303,15 @@ export class CodeMirrorRepl {
                     timeline.setOptions(options);
                     timeline.setGroups(groups);
                     timeline.setItems(repl.timeSeriesLog);
+                }
+                if (repl.iframeView_chkbox.checked) {
+                    const iframe = repl.iframeHolder.getElementsByTagName('iframe')[0]
+                    const height = iframe.contentDocument.body.clientHeight;
+                    if (height !== 0) {
+                        iframe.style.height = height + 'px';
+                    } else {
+                        iframe.setAttribute('style', 'display:none')
+                    }
                 }
             }).catch((e) => {
                 repl.outputHolder.appendChild(repl.appendConsoleLine(e, 'error'))
@@ -362,8 +381,22 @@ export class CodeMirrorRepl {
         if (this.runningEvalContext) {
             this.runningEvalContext.remove(this.iframeHolder) // remove previous context at first
         }
-        const jsCode = this.editor.getText()
+        const result = loadFront(this.editor.getText())
+        let jsCode = result.__content
+        delete result.__content
+        if (options.type === 'script') {
+            const yfmObj = JSON.stringify(result)
+            const yfmOjbStr =
+            `{
+                const ___yfmobj = JSON.parse('${yfmObj}')
+                for (const ____yfmobj of Object.keys(___yfmobj)) {
+                    this[____yfmobj] = ___yfmobj[____yfmobj]
+                }
+            }\n`
+            jsCode = yfmOjbStr + jsCode
+        }
         this.runningEvalContext = createContextEval(options.view)
+        // return this.runningEvalContext.run(jsCode, context, options)
         return this.runningEvalContext.run(jsCode, context, options)
     }
 }

@@ -7,9 +7,17 @@
  * @param receiverId
  * @param {"module" | "script" | "AsyncFunction" | "HTML"} type
  */
-const createSrcDoc = ({ origin, senderId, receiverId, type }, src) => {
+const createSrcDoc = ({ origin, senderId, receiverId, type, extScript }, src) => {
+    let extScriptSrc =""
+    for (const ext of extScript) {
+        extScriptSrc += '<script src="' + ext + '"></script>\n'
+    }
+    
     if (type === 'HTML') {
         return `<!doctype html>
+        <head>
+            ${extScriptSrc}
+        </head>
         <html lang="en">` + src +
             `</html>`;
     }
@@ -17,11 +25,17 @@ const createSrcDoc = ({ origin, senderId, receiverId, type }, src) => {
     if (type === "script") {
         return `<!doctype html>
 <html lang="en">
+<head>
+    ${extScriptSrc}
+</head>
 <body></body>
 </html>`;
     }
     return `<!doctype html>
 <html lang="en">
+<head>
+    ${extScriptSrc} 
+</head>
 <body>
 <script>
 const origin = "${origin}";
@@ -80,7 +94,7 @@ function genId() {
  */
 function createContextEval(view) {
     const iframe = document.createElement("iframe");
-    console.log('iframe.view:', view)
+    iframe.setAttribute('class', 'repl-viewer')
     if (!view) {
         iframe.setAttribute("style", "display: none;");
     }
@@ -98,7 +112,7 @@ function createContextEval(view) {
          * @returns {Promise<unknown>}
          */
         run: (src, scope = {}, options = {}) => {
-            console.log('options:', options)
+            
             return new Promise((resolve, reject) => {
                 // type: "module" | "AsyncFunction"
                 const handleMessage = (event) => {
@@ -126,9 +140,10 @@ function createContextEval(view) {
                     origin: window.location.origin,
                     senderId,
                     receiverId,
-                    type: executionType
+                    type: executionType,
+                    extScript: options.extScript
                 }, src);
-                console.log('embeddedElement:', options.embeddedElement)
+                
                 if (options.embeddedElement) {
                     options.embeddedElement.appendChild(iframe);
                 } else {

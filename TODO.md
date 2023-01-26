@@ -1,7 +1,7 @@
 - [ ] スクロールに応じた見出しの強調 [スクロールスパイ～Bootstrap5設置ガイド](https://bootstrap-guide.com/components/scrollspy)
     https://getbootstrap.jp/docs/5.0/components/scrollspy/
 - [ ] console collapse
-- [ ] yaml front matter
+- [x] yaml front matter
 - [x] ui
     - [x] Visualize Js output 
         - [x] timeline

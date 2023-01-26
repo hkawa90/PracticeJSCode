@@ -53,6 +53,30 @@ markdown文書からWebページを生成します。fenced code blockのJavascr
 * CSSフレームワークの[Introduction · Bootstrap v5.0](https://getbootstrap.com/docs/5.0/getting-started/introduction/)を使用。Webページのレイアウトに[Bootstrap 5 Sidebar Examples - DEV Community 👩‍💻👨‍💻](https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb)を参考にした。
 * [markedjs/marked: A markdown parser and compiler. Built for speed.](https://github.com/markedjs/marked)でmarkdownをブラウザ上でHTMLへ変換
 * 通常のfenced code blockは`highlight.js`を使用
+* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を使ってmetadata取得の実装(ただ取得までの実装、メモに使える?)。JSコード実行では、`script`チェックボックスがOnのときのみ、ローカル変数としてアクセス可能。
+
+## コード実行
+
+### JSコード実行
+
+`script`モードと、`module`モードがある。`script`モードでは、JSコードは`script`タグ内で実行される。`module`モードでは`dynamic import`で読み込まれたモジュールとして実行される。このモード切替は実行ボタン横のチェックボックスで行う。
+
+`script`モードではコード先頭に記述した`YAML Front matter`のオブジェクトをローカル変数としてアクセスできる。次の例では、`YAML Front matter`の`comment`はJSコード内でローカル変数としてアクセスできます(`console.log(comment)`)。
+
+```pjs
+---
+comment: "メモです、ここの領域はYAML front matter. ローカル変数としてアクセスできます"
+---
+console.log(comment)
+console.log(0)
+console.count('label')
+console.countReset('label')
+console.error('Error !')
+```
+
+### HTMLコード実行
+
+`body`を除いた、`head`, `body`タグで構成された、HTMLコードを実行できる。`view`チェックボックONでレンダリング結果(iframe)が表示される。
 
 ## モジュール
 
@@ -90,7 +114,7 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 ## 文書作成方法
 
-章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。styleを変更したい場合は、`style`にカスタムCSSファイルを指定できる。カスタムCSSファイルは通常のCSSファイルと同じ。また同様に、`cmTheme`でCodeMirrorのthemeを設定できる。Theme名は[material](https://www.npmjs.com/package/@uiw/codemirror-themes-all)を参照。
+章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。styleを変更したい場合は、`style`にカスタムCSSファイルを指定できる。カスタムCSSファイルは通常のCSSファイルと同じ。また同様に、`cmTheme`でCodeMirrorのthemeを設定できる。Theme名は[material](https://www.npmjs.com/package/@uiw/codemirror-themes-all)を参照。JSコードの実行に必要な外部スクリプトがある場合は、`extScript`に指定する。
 
 `book.config.json`の例:
 ```json
@@ -98,6 +122,9 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
     "title": "Practice JS Coce",
     "style": "/custom.css",
     "cmTheme" : "materialLight",
+    "extScript" : [
+        "https://cdn.plot.ly/plotly-2.17.1.min.js"
+    ],
     "chapters": [
         { "file": "/1.md", "name" : "README"},
         { "file": "/2.md", "name" : "Mermaid Example"},
@@ -167,6 +194,18 @@ graph TD;
 ```
 ````
 
+fenced code blockの戦闘にYAML front matterでmetadataを設定できます。ただ現在は反映されません。
+
+````
+---
+comment: "メモです"
+---
+```pjs
+console.log(1)
+```
+````
+
+
 あとはMarkdownに従います。
 
 ## メモ
@@ -190,3 +229,7 @@ git push -u origin <new branch>
 * Github:ファイルへのパーマリンクを取得する
 
 コミット SHA を手作業で探すのは不便ですが、ショートカットとして y を押すと、URL がパーマリンクのバージョンに自動で更新されます。 その後、URL をコピーし、共有すると、自分が表示したのとまったく同じものが表示されます。
+
+* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を導入しようとしたら、エラーが出たので下記を参考にして解決。
+
+[Webpack5でReactのプロジェクトをビルドしたら一生エラーが出続けた話 - Qiita](https://qiita.com/issei_k/items/f33164a22b8c1dc74a09)

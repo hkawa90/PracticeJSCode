@@ -1,6 +1,7 @@
 import { marked } from 'marked'
 import * as DOMPurify from 'dompurify'
 import mermaid from "mermaid"
+import { loadFront } from "yaml-front-matter"
 
 export default async function createDocFromMd(mdOptions, dstElement = null, tocElement = null) {
     const toc = tocElement || document.getElementById('TOC')
@@ -37,7 +38,11 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
         const bookInfo = JSON.parse(await fetchData('/book.config.json'))
         if (bookInfo) {
             for (let i = 0; i < bookInfo.chapters.length; i++) {
-                bookInfo.chapters[i].src = await fetchData(bookInfo.chapters[i].file)
+                const result = loadFront(await fetchData(bookInfo.chapters[i].file))
+                bookInfo.chapters[i].src = result.__content
+                // set yaml front matter
+                delete result.__content
+                bookInfo.chapters[i].yfm = result
             }
         }
         return bookInfo
