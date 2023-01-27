@@ -1,3 +1,6 @@
+// License: Unkown
+// https://github.com/azu/codemirror-console
+
 //import { createContextEval } from 'codemirror-console/lib/context-eval'
 // Webpack5 for yaml-front-matter https://qiita.com/issei_k/items/f33164a22b8c1dc74a09
 
@@ -12,6 +15,7 @@ import * as themes from '@uiw/codemirror-themes-all'
 import { repositionTooltips } from '@codemirror/view'
 import { DataSet, Timeline } from "vis-timeline/standalone";
 import { loadFront } from "yaml-front-matter"
+import {genId} from './util'
 
 class PracticeEditor {
     constructor(options) {
@@ -101,26 +105,29 @@ export class CodeMirrorRepl {
         this.network.ts = []
         // for console function
         this.consoleCount = {}
+        this.ID = genId()
     }
-    static createEditorFromSelector(selectors, options) {
-        let editors = []
+    static createEditorFromSelector(selectors, options, codeRepl) {
         const s = selectors || '[data-role="codeBlock"].language-javascript'
         const elements = document.querySelectorAll(s)
         for (let cnt = 0; cnt < elements.length; cnt++) {
-            editors.push(CodeMirrorRepl.createEditorFromElement(elements[cnt], options))
+            const cr = CodeMirrorRepl.createEditorFromElement(elements[cnt], options)
+            codeRepl[cr.id()] = cr
         }
-        return editors
+        return codeRepl
     }
     static createEditorFromElement(element, options) {
-
         const repl = new CodeMirrorRepl(options)
+        repl.element = element
+        repl.element.setAttribute('id', repl.id())
         repl.editor.setText(element.textContent)
-        repl.editor.getText()
+        const config = repl.parseConfig().config
+        // repl.editor.getText()
         repl.editor.setReadOnly(false)
 
-        const runBtn = document.createElement('button')
-        runBtn.setAttribute('class', 'runJsCode btn btn-primary me-3 mt-1')
-        runBtn.setAttribute('type', 'button')
+        repl.runBtn = document.createElement('button')
+        repl.runBtn.setAttribute('class', 'runJsCode btn btn-primary me-3 mt-1')
+        repl.runBtn.setAttribute('type', 'button')
 
         const clrBtn = document.createElement('button')
         clrBtn.setAttribute('class', 'clrlog btn btn-primary me-3 mt-1')
@@ -155,10 +162,29 @@ export class CodeMirrorRepl {
         const iViewlabel = document.createElement('label')
         iViewlabel.setAttribute('class', 'labelIviewchkbox mt-1 form-check-label me-3')
         iViewlabel.appendChild(repl.iframeView_chkbox)
+        // コード、実行ボタン、クリアボタン、チェックボックス、タイムライン表示を非表示にする
+        if (config) {
+            if (config.hasOwnProperty('hide')) {
+                if (config.hide) {
+                    repl.editor.dom().setAttribute('style', 'display:none')
+                    // codemirroのclass=c1でdisplay:noneが有効にならない.
+                    repl.editor.dom().setAttribute('class', '')
+                    repl.outputHolder.setAttribute('style', 'display:none')
+                    repl.visualizeHolder.setAttribute('style', 'display:none')
+                    repl.runBtn.setAttribute('style', 'display:none')
+                    clrBtn.setAttribute('style', 'display:none')
+                    label.setAttribute('style', 'display:none')
+                    iViewlabel.setAttribute('style', 'display:none')
+                    if (repl.lang === 'js') {
+                        repl.scrlabel.setAttribute('style', 'display:none')
+                    }
+                }
+            }
+        }
         if (repl.lang === 'js') {
-            element.after(repl.editor.dom(), repl.outputHolder, repl.visualizeHolder, repl.iframeHolder, runBtn, clrBtn, label, repl.scrlabel, iViewlabel)
+            element.after(repl.editor.dom(), repl.outputHolder, repl.visualizeHolder, repl.iframeHolder, repl.runBtn, clrBtn, label, repl.scrlabel, iViewlabel)
         } else {
-            element.after(repl.editor.dom(), repl.outputHolder, repl.visualizeHolder, repl.iframeHolder, runBtn, clrBtn, label, iViewlabel)
+            element.after(repl.editor.dom(), repl.outputHolder, repl.visualizeHolder, repl.iframeHolder, repl.runBtn, clrBtn, label, iViewlabel)
         }
         element.setAttribute("style", "display:none")
 
@@ -276,7 +302,7 @@ export class CodeMirrorRepl {
             }
         }
         // 実行ボタン押下
-        runBtn.addEventListener('click', () => {
+        repl.runBtn.addEventListener('click', () => {
             let option = {}
             if (repl.lang === "js") {
                 option = {
@@ -290,7 +316,7 @@ export class CodeMirrorRepl {
             option.embeddedElement = repl.iframeHolder
             option.extScript = repl.options.extScript
 
-            repl.runInContext({ console: consoleMock }, option).then((r) => {
+            repl.runInContext({ console: consoleMock }, option).then(/*async*/(r) => {
                 if (repl.vis_chkbox.checked) {
                     let groups = new DataSet();
                     let cnt = 0
@@ -305,13 +331,36 @@ export class CodeMirrorRepl {
                     timeline.setItems(repl.timeSeriesLog);
                 }
                 if (repl.iframeView_chkbox.checked) {
+                    function isHidden(elem) {
+                        return !elem.offsetWidth && !elem.offsetHeight;
+                    }
+                    // TODO: iframe->repl.iframeHolder
+                    const wait = async (ms) => {
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                console.log('wait success.')
+                                resolve(); // setTimeoutの第一引数の関数として簡略化できる
+                            }, ms)
+                        });
+                    }
+                    //await wait(10000)
                     const iframe = repl.iframeHolder.getElementsByTagName('iframe')[0]
-                    const height = iframe.contentDocument.body.clientHeight;
+                    console.log("iframe id:", iframe.getAttribute('id'))
+                    const height = iframe.contentDocument.body.clientHeight
                     if (height !== 0) {
                         iframe.style.height = height + 'px';
                     } else {
-                        iframe.setAttribute('style', 'display:none')
+                        setTimeout((iframe) => {
+                            const height = iframe.contentDocument.body.clientHeight
+                            const id = iframe.getAttribute('id')
+                            console.log('fire:iframe:', height, " id:", id)
+                            if (height !== 0) {
+                                iframe.style.height = height + 'px';
+                            }
+                        }, 1000, iframe)
+                        // iframe.setAttribute('style', 'display:none')
                     }
+                    console.log('lang:', repl.lang, " height:", height)
                 }
             }).catch((e) => {
                 repl.outputHolder.appendChild(repl.appendConsoleLine(e, 'error'))
@@ -328,7 +377,18 @@ export class CodeMirrorRepl {
                 repl.visualizeHolder.removeChild(repl.visualizeHolder.firstChild)
             }
         })
+        if (config) {
+            if (config.hasOwnProperty('autorun')) {
+                if (config.autorun) {
+                    element.setAttribute('data-auto-run', 'true')
+                    // repl.dispatchRun()
+                }
+            }
+        }
         return repl
+    }
+    id() {
+        return this.ID
     }
     createEditor(options) {
         // console内容保持エレメント
@@ -342,7 +402,16 @@ export class CodeMirrorRepl {
 
         return new PracticeEditor(options)
     }
+    dispatchRun() {
+        const event = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+        })
+        this.runBtn.dispatchEvent(event)
+    }
     clearConsole() {
+        console.log('clear console')
         if (this.outputHolder) {
             // this.outputHolderの子要素削除
             while (this.outputHolder.firstChild) {
@@ -366,11 +435,16 @@ export class CodeMirrorRepl {
         this.editor.setOption(op, value)
     }
     destroy() {
+        console.log('destory')
         this.editor = null
         if (this.runningEvalContext) {
             this.runningEvalContext.remove()
         }
         Object.freeze(this)
+    }
+    parseConfig() {
+        const result = loadFront(this.editor.getText())
+        return result
     }
     /**
      * @param {object} context
@@ -381,21 +455,79 @@ export class CodeMirrorRepl {
         if (this.runningEvalContext) {
             this.runningEvalContext.remove(this.iframeHolder) // remove previous context at first
         }
-        const result = loadFront(this.editor.getText())
+
+        const result = this.parseConfig()
         let jsCode = result.__content
         delete result.__content
+        if (result.config) {
+            if (result.config.hasOwnProperty('timeline')) {
+                if (result.config.timeline) {
+                    this.vis_chkbox.checked = true
+                } else {
+                    this.vis_chkbox.checked = false
+                }
+            }
+            if (result.config.hasOwnProperty('autorun')) {
+                if (result.config.autorun) {
+                    options.autorun = true
+                } else {
+                    options.autorun = false
+                }
+            }
+            if (result.config.hasOwnProperty('view')) {
+                if (result.config.view) {
+                    options.view = true
+                    this.iframeView_chkbox.checked = true
+                } else {
+                    options.view = false
+                    this.iframeView_chkbox.checked = false
+                }
+            }
+            if (result.config.hasOwnProperty('script')) {
+                if (result.config.script === 'script') {
+                    this.script_chkbox.checked = true
+                } else {
+                    this.script_chkbox.checked = false
+                }
+                options.type = result.config.script
+            }
+            if (result.config.hasOwnProperty('sandbox')) {
+                if (result.config.sandbox !== '') {
+                    options.sandbox = result.config.sandbox
+                }
+            }
+            console.log(result.config)
+            delete result.config
+        }
+        options.sandbox = options.sandbox || "allow-scripts allow-same-origin"
         if (options.type === 'script') {
             const yfmObj = JSON.stringify(result)
             const yfmOjbStr =
-            `{
+                `{
                 const ___yfmobj = JSON.parse('${yfmObj}')
                 for (const ____yfmobj of Object.keys(___yfmobj)) {
                     this[____yfmobj] = ___yfmobj[____yfmobj]
                 }
             }\n`
             jsCode = yfmOjbStr + jsCode
+        } else if (options.type === 'module') {
+            const yfmObj = JSON.stringify(result)
+            const yfmOjbStr =
+                `{
+                const ___yfmobj = JSON.parse('${yfmObj}')
+                for (const ____yfmobj of Object.keys(___yfmobj)) {
+                    globalThis[____yfmobj] = ___yfmobj[____yfmobj]
+                }
+            }\n`
+            jsCode = yfmOjbStr + jsCode
         }
-        this.runningEvalContext = createContextEval(options.view)
+        this.runningEvalContext = createContextEval(options)
+        if (options.autorun) {
+            this.runningEvalContext.iframeSetAttribute('data-autorun', 'true')
+        } else {
+            this.runningEvalContext.iframeSetAttribute('data-autorun', 'false')
+        }
+        this.iframID = this.runningEvalContext.iframeId()
         // return this.runningEvalContext.run(jsCode, context, options)
         return this.runningEvalContext.run(jsCode, context, options)
     }
