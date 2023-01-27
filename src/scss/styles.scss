@@ -4,11 +4,98 @@
 @import "./jpn.css";
 @import 'highlight.js/styles/github.css';
 
-@media (min-width: 576px) {
-    .h-sm-100 {
-        height: 100%;
+body {
+    font-size: .875rem;
+}
+
+.feather {
+    width: 16px;
+    height: 16px;
+}
+
+/*
+   * サイドバー
+   */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    /* ナビゲーションバーの背面 */
+    padding: 48px 0 0;
+    /* ナビゲーションバーの高さ */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        top: 5rem;
     }
 }
+
+.sidebar-sticky {
+    height: calc(100vh - 48px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* ビューポートがコンテンツより短い場合、スクロール可能なコンテンツ */
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+}
+
+.sidebar .nav-link .feather {
+    margin-right: 4px;
+    color: #727272;
+}
+
+.sidebar .nav-link.active {
+    color: #2470dc;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+    color: inherit;
+}
+
+.sidebar-heading {
+    font-size: .75rem;
+}
+
+/*
+   * ナビゲーションバー
+   */
+
+.navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    background-color: rgba(0, 0, 0, .25);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar .navbar-toggler {
+    top: .25rem;
+    right: 1rem;
+}
+
+.navbar .form-control {
+    padding: .75rem 1rem;
+}
+
+.form-control-dark {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .1);
+}
+
+.form-control-dark:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
 
 .bg-light {
     background-color: #cce0cc !important;
@@ -21,6 +108,7 @@ body {
 .form-check-label {
     font-size: 1rem;
 }
+
 /* console */
 .mirror-console-log-row {
     border-left: solid 10px #999;
@@ -92,7 +180,9 @@ h3 {
     /*下線*/
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
     padding: 0.5em;
     /*文字周りの余白*/
     color: #010101;
@@ -182,4 +272,56 @@ pre code[class^="language-"]:not([class="language-mermaid"]) {
 iframe.repl-viewer {
     width: 80%;
     height: 10rem;
+}
+
+// table
+// https://webliker.info/css/75964/
+
+table {
+    // width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+table th:first-child {
+    border-radius: 5px 0 0 0;
+}
+
+table th:last-child {
+    border-radius: 0 5px 0 0;
+    border-right: 1px solid #3c6690;
+}
+
+table th {
+    text-align: center;
+    color: white;
+    background: linear-gradient(#829ebc, #225588);
+    border-left: 1px solid #3c6690;
+    border-top: 1px solid #3c6690;
+    border-bottom: 1px solid #3c6690;
+    box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.3) inset;
+    // width: 25%;
+    padding: 10px 0;
+}
+
+table td {
+    text-align: start;
+    border-left: 1px solid #a8b7c5;
+    border-bottom: 1px solid #a8b7c5;
+    border-top: none;
+    box-shadow: 0px -3px 5px 1px #eee inset;
+    // width: 25%;
+    padding: 10px 0;
+}
+
+table td:last-child {
+    border-right: 1px solid #a8b7c5;
+}
+
+table tr:last-child td:first-child {
+    border-radius: 0 0 0 5px;
+}
+
+table tr:last-child td:last-child {
+    border-radius: 0 0 5px 0;
 }

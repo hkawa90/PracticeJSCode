@@ -2,6 +2,7 @@ import { marked } from 'marked'
 import * as DOMPurify from 'dompurify'
 import mermaid from "mermaid"
 import { loadFront } from "yaml-front-matter"
+import codeRepl from './codeRepl'
 
 export default async function createDocFromMd(mdOptions, dstElement = null, tocElement = null) {
     const toc = tocElement || document.getElementById('TOC')
@@ -56,7 +57,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             link.href = css;
             link.media = 'all';
             head.appendChild(link);
-    
+
         }
     }
     const bookInfo = await getBookInfo()
@@ -103,6 +104,17 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             chapText.setAttribute('data-chapter-page', i)
             chapText.innerText = bookInfo.chapters[i].name
             chapText.addEventListener('click', async (evt) => {
+                function runCode(element, selector) {
+                    const p = element.querySelectorAll(selector)
+                    for (const e of p) {
+                        if (e.dataset.autoRun) {
+                            const editor = codeRepl[e.getAttribute('id')]
+                            if (editor) {
+                                editor.dispatchRun()
+                            }
+                        }
+                    }
+                }
                 const page = evt.target.dataset.chapterPage
                 for (let p = 0; p < bookInfo.chapters.length; p++) {
                     const secListHref = 'chap' + p + '-collapse'
@@ -111,8 +123,12 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                         const chapPage = document.getElementById('chap-' + p + '-content')
                         chapPage.setAttribute('style', '')
                         if (chapPage.dataset.mdInit === "false") {
+                            // mermaid
                             const me = chapPage.querySelectorAll('.language-mermaid')
                             await mermaid.init(undefined, me)
+                            // JS Code
+                            runCode(chapPage, '.language-pjs')
+                            runCode(chapPage, '.language-phtml')
                             chapPage.dataset.mdInit = true
                         }
                     } else {

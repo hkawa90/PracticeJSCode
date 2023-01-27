@@ -5,10 +5,11 @@ import hljs from 'highlight.js'
 
 import { CodeMirrorRepl } from './CodeMirrorRepl'
 import createDocFromMd from './CrtDoc'
+import codeRepl from './codeRepl'
 
 import '../scss/styles.scss'
 
-mermaid.initialize({ startOnLoad: false });
+mermaid.initialize({ startOnLoad: false })
 
 document.addEventListener('DOMContentLoaded', async function () {
   // MarkdownをHTMLへ
@@ -26,13 +27,14 @@ document.addEventListener('DOMContentLoaded', async function () {
   CodeMirrorRepl.createEditorFromSelector('.language-pjs', {
     lang: 'js',
     cmTheme: bookInfo.cmTheme, extScript: bookInfo.extScript
-  })
+  }, codeRepl)
   // HTMLのJSコードを実行
   CodeMirrorRepl.createEditorFromSelector('.language-phtml', {
     lang: 'HTML',
     cmTheme: bookInfo.cmTheme,
     extScript: bookInfo.extScript
-  })
+  }, codeRepl)
+  console.log(codeRepl)
   // Event handling
   // window.addEventListener("repl-tracing", (event) => {
   // })
