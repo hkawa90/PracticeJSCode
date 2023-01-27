@@ -1,34 +1,30 @@
 <!doctype html>
-<html lang="jp">
+<html lang="ja">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Practice JS</title>
 </head>
-<div class="container-fluid overflow-hidden">
-    <div class="row vh-100 overflow-auto">
-        <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-light d-flex sticky-top">
-            <div
-                class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-dark">
-                <!-- TOC -->
-                <h2 class="border-bottom">目次</h2>
-                <ul class="list-unstyled ps-0" id="TOC"></ul>
-            </div>
-        </div>
-        <div class="col d-flex flex-column h-sm-100">
-            <main class="row overflow-auto">
-                <div class="col pt-4 bg-light">
-                    <div id="CONTENTS"></div>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
+                    <!-- TOC -->
+                    <h2 class="border-bottom">目次</h2>
+                    <ul class="nav flex-column" id="TOC"></ul>
                 </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div id="CONTENTS"></div>
             </main>
-            <footer class="row bg-light py-4 mt-auto">
-                <div class="col"> <a href="https://github.com/hkawa90/PracticeJSCode">Github</a> </div>
-            </footer>
         </div>
     </div>
-</div>
-<script src="./main.js"></script>
+
+    <script src="./main.js"></script>
 </body>
 
 </html>
