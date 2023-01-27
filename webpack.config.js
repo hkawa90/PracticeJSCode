@@ -3,7 +3,7 @@ const path = require('path')
 module.exports = {
   entry: './src/js/main.js',
   output: {
-    filename: 'main.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
   devServer: {
