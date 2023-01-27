@@ -1,5 +1,10 @@
+import {genId} from './util'
+import hooker from 'hooker'
+
 // License: MIT
 // https://github.com/syumai/sandboxed-eval
+// License: Unkown
+// https://github.com/azu/codemirror-console
 /**
  *
  * @param origin
@@ -15,12 +20,10 @@ const createSrcDoc = ({ origin, senderId, receiverId, type, extScript }, src) =>
     
     if (type === 'HTML') {
         return `<!doctype html>
-        <head>
-            ${extScriptSrc}
-        </head>
-        <html lang="en">` + src +
+        <html lang="jp">` + src +
             `</html>`;
     }
+    // TODO: scriptだと描画がうまくいかんので、ちょっとここをコメントアウトしてみた。->うまくいったので、このままかも。
     // script does not require <script> because just use eval on contextWindow
     if (type === "script") {
         return `<!doctype html>
@@ -28,7 +31,8 @@ const createSrcDoc = ({ origin, senderId, receiverId, type, extScript }, src) =>
 <head>
     ${extScriptSrc}
 </head>
-<body></body>
+<body style="margin-top: 0; margin-bottom:0;">
+</body>
 </html>`;
     }
     return `<!doctype html>
@@ -36,7 +40,7 @@ const createSrcDoc = ({ origin, senderId, receiverId, type, extScript }, src) =>
 <head>
     ${extScriptSrc} 
 </head>
-<body>
+<body style="margin-top: 0; margin-bottom:0;">
 <script>
 const origin = "${origin}";
 const senderId = "${senderId}";
@@ -83,26 +87,37 @@ window.parent.postMessage({ id: senderId, ready: true }, origin);
 </html>`;
 };
 
-function genId() {
-    return Array.from(crypto.getRandomValues(new Uint32Array(4)))
-        .map((n) => n.toString(36))
-        .join("");
-}
-
 /**
  * @returns {{run: (function(string, Object=, {type: ("module"|"script"|"AsyncFunction"|"HTML")}=): Promise<*>), remove: remove}}
  */
-function createContextEval(view) {
-    const iframe = document.createElement("iframe");
+export function createContextEval(options) {
+    const iframe = document.createElement("iframe")
+    const iframeId = genId()
+    // hooker.hook(iframe, "setAttribute", function() {
+    //     console.trace('setAttribute:', arguments)
+    //   });
     iframe.setAttribute('class', 'repl-viewer')
-    if (!view) {
-        iframe.setAttribute("style", "display: none;");
+    iframe.setAttribute('id',  iframeId)
+    if (options.sandbox) {
+        iframe.setAttribute('sandbox', options.sandbox)
+    }
+    if (!options.view) {
+        iframe.setAttribute("style", "display:none;");
+    } else {
+        iframe.setAttribute("style", "margin-top: 0; margin-bottom:0;");
     }
     const senderId = genId();
     const receiverId = genId();
 
     return {
+        iframeSetAttribute: (key, value) => {
+            iframe.setAttribute(key, value)
+        },
+        iframeId: () => {
+            return iframeId
+        },
         remove: (parent) => {
+            console.log('repl:remove child')
             parent.removeChild(iframe);
         },
         /**
@@ -143,7 +158,7 @@ function createContextEval(view) {
                     type: executionType,
                     extScript: options.extScript
                 }, src);
-                
+                console.log('embedded:', options.embeddedElement)
                 if (options.embeddedElement) {
                     options.embeddedElement.appendChild(iframe);
                 } else {
@@ -159,14 +174,13 @@ function createContextEval(view) {
                 // does not use postMessage, because postMessage restrict transferable object
                 if (executionType === "script") {
                     try {
-                        resolve(iframeWindow.eval(src));
+                        resolve(iframeWindow.eval(src))
                     } catch (error) {
-                        reject(error);
+                        reject(error)
                     }
                 }
-            });
+            })
         }
-    };
+    }
 }
 
-module.exports.createContextEval = createContextEval;
