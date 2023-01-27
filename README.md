@@ -24,7 +24,7 @@ Node.jsを使っています。環境に合わせて[ダウンロード | Node.j
 
 Package Managerの[Home | Yarn - Package Manager](https://yarnpkg.com/)使用しているので、[Installation | Yarn - Package Manager](https://yarnpkg.com/getting-started/install)を参考にインストールします。
 
-2. moduleのインストール
+3. moduleのインストール
 
 ```shell
 yarn install
@@ -53,25 +53,63 @@ markdown文書からWebページを生成します。fenced code blockのJavascr
 * CSSフレームワークの[Introduction · Bootstrap v5.0](https://getbootstrap.com/docs/5.0/getting-started/introduction/)を使用。Webページのレイアウトに[Bootstrap 5 Sidebar Examples - DEV Community 👩‍💻👨‍💻](https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb)を参考にした。
 * [markedjs/marked: A markdown parser and compiler. Built for speed.](https://github.com/markedjs/marked)でmarkdownをブラウザ上でHTMLへ変換
 * 通常のfenced code blockは`highlight.js`を使用
-* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を使ってmetadata取得の実装(ただ取得までの実装、メモに使える?)。JSコード実行では、`script`チェックボックスがOnのときのみ、ローカル変数としてアクセス可能。
+* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を使ってmetadata取得の実装(ただ取得までの実装、メモに使える?)。JSコード実行では、実行時の動作設定とローカル変数としてアクセス可能。
 
 ## コード実行
 
 ### JSコード実行
 
-`script`モードと、`module`モードがある。`script`モードでは、JSコードは`script`タグ内で実行される。`module`モードでは`dynamic import`で読み込まれたモジュールとして実行される。このモード切替は実行ボタン横のチェックボックスで行う。
+`実行`ボタン押下でJS/HTMLコードが実行できます。`クリア`ボタン押下でコンソールログと描画表示をクリアします。
 
-`script`モードではコード先頭に記述した`YAML Front matter`のオブジェクトをローカル変数としてアクセスできる。次の例では、`YAML Front matter`の`comment`はJSコード内でローカル変数としてアクセスできます(`console.log(comment)`)。
+`script`モードと、`module`モードがある。このモード切替は実行ボタン横のチェックボックスで行う。
+`script`モードでは、JSコードは`eval()`で実行される。`module`モードでは`dynamic import`で読み込まれたモジュールとして実行される。このため、`strict`モードで動作する。
+`script`モードではコード先頭に記述した`YAML Front matter`のオブジェクトをローカル変数としてアクセスできる。次の例では、Markdownでの実行可能なJSコード記述方法を示す。言語指定で`javascript`ではなく`pjs`とします。
 
 ```pjs
----
-comment: "メモです、ここの領域はYAML front matter. ローカル変数としてアクセスできます"
----
-console.log(comment)
 console.log(0)
 console.count('label')
 console.countReset('label')
 console.error('Error !')
+```
+
+YAML front matterにてローカル変数の指定と、実行時動作の設定を行うことができます。
+まずはYAML front matterの例です。`---`と`---`とで挟まれた範囲がYAML front matterです。`comment`はそのままローカル変数としてアクセス可能です。下記例では、コード表示下部のコンソールに`やっほー`と表示されます。
+
+```pjs
+---
+comment : "やっほー"
+---
+console.log(comment)
+```
+
+次に、実行時動作の設定は同じYAML front matterにて`config`内容を変更することで動作を切り替えることができます。
+設定可能な一覧は下記の通り。
+
+|item|内容|備考   |default|
+|---|---|---|---|
+|view|描画On/Off|boolean(On:true, Off:false)|false|
+|autorun|自動実行|boolean(自動実行する:true, 自動実行しない:false)|false|
+|hide|ソースコード表示On/Off|boolean(表示しない:true, 表示する:false)|false|
+|timeline|時系列表示On/Off|boolean(On:true, Off:false)|false|
+|script|実行モード|"script"or"module"|"script"|
+|sandbox|iframe sandbox属性|string|allow-scripts allow-same-origin|
+
+実際の設定例は以下の通り。指定がない項目は、デフォルト値で動作する。
+
+```javascript
+---
+config: 
+  view: true
+  autorun: false
+  hide: false
+  timeline: false
+  script: module
+size: 50
+---
+console.log(size)
+const button = document.createElement('button')
+button.innerText = "button"
+document.body.appendChild(button)
 ```
 
 ### HTMLコード実行
@@ -136,7 +174,7 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 コード実行させたいJavascript codeでは下記のように言語指定で`pjs`とします。
 
-````
+````javascript
 ```pjs
 console.log(1)
 ```
@@ -144,7 +182,7 @@ console.log(1)
 
 実行させたいHTMLでは下記のように言語指定で`phtml`とします。
 
-````
+````javascript
 ```phtml
 <head>
 	<!-- Load plotly.js into the DOM -->
@@ -184,7 +222,7 @@ Plotly.newPlot('myDiv', data);
 ````
 mermaidで表示させたい場合は、下記のように言語指定で`mermaid`とします。
 
-````
+````javascript
 ```mermaid
 graph TD;
     A-->B;
@@ -196,7 +234,7 @@ graph TD;
 
 fenced code blockの戦闘にYAML front matterでmetadataを設定できます。ただ現在は反映されません。
 
-````
+````javascript
 ---
 comment: "メモです"
 ---
@@ -204,7 +242,6 @@ comment: "メモです"
 console.log(1)
 ```
 ````
-
 
 あとはMarkdownに従います。
 
@@ -218,7 +255,7 @@ $ git subtree push --prefix dist origin gh-pages
 参考ページ：[Deploy to `gh-pages` from a `dist` folder on the master branch. Useful for use with \[yeoman\](http://yeoman.io).](https://gist.github.com/cobyism/4730490)
 
 * 空のブランチ作成
-- [ ] TODO:動作確認
+    - [ ] TODO:動作確認
 
 ```shell
 git switch --orphan <new branch>
@@ -233,3 +270,43 @@ git push -u origin <new branch>
 * [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を導入しようとしたら、エラーが出たので下記を参考にして解決。
 
 [Webpack5でReactのプロジェクトをビルドしたら一生エラーが出続けた話 - Qiita](https://qiita.com/issei_k/items/f33164a22b8c1dc74a09)
+
+*`iframe`には`sandbox`属性がある。
+TODO: sandboxの説明
+
+*`iframe`のクライアント領域の大きさで`iframe`のサイズを設定すると、小さくなる。`iframe`内の`body`にmarginがあるため。
+
+* MarkdownのYaml front matterの定番は、layout, date, categories, tags, titleのようだ。このプログラムでは使い勝手がないのかも。
+
+* git tag
+
+```shell
+git tag -a tagname -m 'comment for tag'
+git push origin tagname
+```
+
+* iframeのサイズ計算で、まだ表示が間に合わない時clientサイズが0になる。[function isHidden(elem) {
+  return !elem.offsetWidth && !elem.offsetHeight;
+}](https://ja.javascript.info/size-and-scroll)が詳しい。以下で隠されている要素か確認できるらしい。
+
+```javascript
+function isHidden(elem) {
+  return !elem.offsetWidth && !elem.offsetHeight;
+}
+```
+
+* [phw/peek: Simple animated GIF screen recorder with an easy to use interface](https://github.com/phw/peek)を使ってAnimated GIF作成。
+
+* debugで[ba-hooker.min.js](https://github.com/cowboy/javascript-hooker)を使ってデバッグ
+```javascript
+    import hooker from 'hooker'
+    // iframeに属性をつけているところをtraceできる。
+    const iframe = document.createElement("iframe");
+    hooker.hook(iframe, "setAttribute", function() {
+        console.trace('setAttribute:', arguments)
+      });
+```
+ただ`strict`モードだとcaller,calleeが取得できないので、`console.trace()`を使っている。
+
+* 起動時のコード実行で、コード評価管理用語にiframeの高さを`clientHeight`で調整するが、初回はレンダリングが間に合わないのか`0`となる。workaroundで`0`の場合はデフォルトの高さのままとする。
+    * 親要素が`display:none`な状態でiframe内でrenderingされた場合、`clientHeight`が0になるようなので、`display:none`が解除された段階でコード実行するよう変更
