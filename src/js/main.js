@@ -9,19 +9,12 @@ import codeRepl from './codeRepl'
 
 import '../scss/styles.scss'
 
+// mermaid
 mermaid.initialize({ startOnLoad: false })
 
 document.addEventListener('DOMContentLoaded', async function () {
   // MarkdownをHTMLへ
-  const mdOptions = {
-    pedantic: false,
-    gfm: true,
-    breaks: false,
-    sanitize: false,
-    smartypants: false,
-    xhtml: false
-  }
-  const bookInfo = await createDocFromMd(mdOptions)
+  const bookInfo = await createDocFromMd()
 
   // JSコードを実行
   CodeMirrorRepl.createEditorFromSelector('.language-pjs', {
@@ -34,21 +27,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     cmTheme: bookInfo.cmTheme,
     extScript: bookInfo.extScript
   }, codeRepl)
-  console.log(codeRepl)
-  // Event handling
-  // window.addEventListener("repl-tracing", (event) => {
-  // })
-  // window.addEventListener("message", (event) => {
-  //   console.log("event:", event)
-  //   if (event.origin !== window.origin)
-  //     return;
-  //   const result_field = document.getElementById('result')
-  //   if (result_field && event.data) {
-  //     if ((event.data.type) && (event.data.type == 'logtrace')) {
-
-  //     }
-  //   }
-  // }, false)
+ 
   // highlight
   document.querySelectorAll('pre code').forEach((el) => {
     const className = el.getAttribute('class')
