@@ -7,17 +7,22 @@ import codeRepl from './codeRepl'
 export default async function createDocFromMd(mdOptions, dstElement = null, tocElement = null) {
     const toc = tocElement || document.getElementById('TOC')
     const content = dstElement || document.getElementById('CONTENTS')
-    const mdOp = mdOptions || {}
-
-    marked.setOptions(mdOp)
+    const mdOp = mdOptions || {
+        pedantic: false,
+        gfm: true,
+        breaks: false,
+        sanitize: false,
+        smartypants: false,
+        xhtml: false
+    }
 
     async function getBookInfo() {
         async function fetchData(file) {
-            const url = location.href
+            const url = document.location
             let r = fetch(url + file)
                 .then((response) => {
                     if ((response) && (response.body)) {
-                        return response.body.getReader().read();
+                        return response.body.getReader().read()
                     } else {
                         return Promise.reject(
                             new Error(`Rresponse data is nil.`),
@@ -57,7 +62,6 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             link.href = css;
             link.media = 'all';
             head.appendChild(link);
-
         }
     }
     const bookInfo = await getBookInfo()
@@ -66,7 +70,11 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
         if (bookInfo.style) {
             loadCSS(bookInfo.style)
         }
+        if (bookInfo.markedOptions) {
+            mdOp = { ...bookInfo.markedOptions, ...mdOp }
+        }
 
+        marked.setOptions(mdOp)
         // set page title
         document.getElementsByTagName('title')[0].innerText = bookInfo.title
         for (let i = 0; i < bookInfo.chapters.length; i++) {
@@ -99,11 +107,12 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             chap.setAttribute('data-bs-target', '#' + secListHref)
             chap.setAttribute('aria-expanded', 'true')
             const chapText = document.createElement('div')
-            chapText.setAttribute('class', 'text-wrap text-break')
+            chapText.setAttribute('class', 'text-wrap text-break text-start')
             chapText.setAttribute('style', "width:12rem;")
             chapText.setAttribute('data-chapter-page', i)
             chapText.innerText = bookInfo.chapters[i].name
             chapText.addEventListener('click', async (evt) => {
+                // Auto-run指定あるコードを実行する
                 function runCode(element, selector) {
                     const p = element.querySelectorAll(selector)
                     for (const e of p) {
