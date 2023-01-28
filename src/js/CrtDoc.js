@@ -7,7 +7,7 @@ import codeRepl from './codeRepl'
 export default async function createDocFromMd(mdOptions, dstElement = null, tocElement = null) {
     const toc = tocElement || document.getElementById('TOC')
     const content = dstElement || document.getElementById('CONTENTS')
-    const mdOp = mdOptions || {
+    let mdOp = mdOptions || {
         pedantic: false,
         gfm: true,
         breaks: false,
