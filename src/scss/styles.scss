@@ -148,7 +148,7 @@ body {
 }
 
 h1 {
-    padding: 0.5em;
+    padding: 0.3em;
     /*文字周りの余白*/
     color: #010101;
     /*文字色*/
@@ -159,7 +159,7 @@ h1 {
 }
 
 h2:not(.border-bottom) {
-    padding: 0.5em;
+    padding: 0.25em;
     /*文字周りの余白*/
     color: #010101;
     /*文字色*/
@@ -170,7 +170,7 @@ h2:not(.border-bottom) {
 }
 
 h3 {
-    padding: 0.5em;
+    padding: 0.2em;
     /*文字周りの余白*/
     color: #010101;
     /*文字色*/
@@ -183,7 +183,7 @@ h3 {
 h4,
 h5,
 h6 {
-    padding: 0.5em;
+    padding: 0.15em;
     /*文字周りの余白*/
     color: #010101;
     /*文字色*/
@@ -264,9 +264,11 @@ pre code[class^="language-"]:not([class="language-mermaid"]) {
     resize: vertical;
 }
 
+// codemirror
 .cm-editor {
     resize: vertical;
     overflow: hidden;
+    border : 1px rgba(255, 255, 255, .1);
 }
 
 iframe.repl-viewer {
