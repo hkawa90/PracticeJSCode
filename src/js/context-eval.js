@@ -127,10 +127,11 @@ export function createContextEval(options) {
          * @returns {Promise<unknown>}
          */
         run: (src, scope = {}, options = {}) => {
-            
+            console.log('run:', options)
             return new Promise((resolve, reject) => {
                 // type: "module" | "AsyncFunction"
                 const handleMessage = (event) => {
+                    console.log('handleMessage:', event)
                     if (event.source !== iframe.contentWindow) {
                         return;
                     }
@@ -178,7 +179,10 @@ export function createContextEval(options) {
                     } catch (error) {
                         reject(error)
                     }
+                } else if (executionType === "HTML") {
+                    resolve()
                 }
+                console.log('run exit:')
             })
         }
     }

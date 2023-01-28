@@ -15,7 +15,7 @@ import * as themes from '@uiw/codemirror-themes-all'
 import { repositionTooltips } from '@codemirror/view'
 import { DataSet, Timeline } from "vis-timeline/standalone";
 import { loadFront } from "yaml-front-matter"
-import {genId} from './util'
+import { genId } from './util'
 
 class PracticeEditor {
     constructor(options) {
@@ -37,7 +37,7 @@ class PracticeEditor {
                 extensions: [basicSetup, javascript(), themes[theme], myTheme]
             })
         } else { // html
-            this.editorState = EditorState.create({
+             this.editorState = EditorState.create({
                 // doc: textarea.textContent,
                 extensions: [basicSetup, html(), themes[theme], myTheme]
             })
@@ -317,6 +317,7 @@ export class CodeMirrorRepl {
             option.extScript = repl.options.extScript
 
             repl.runInContext({ console: consoleMock }, option).then(/*async*/(r) => {
+                console.log('runInContext:', option)
                 if (repl.vis_chkbox.checked) {
                     let groups = new DataSet();
                     let cnt = 0
@@ -347,24 +348,30 @@ export class CodeMirrorRepl {
                     const iframe = repl.iframeHolder.getElementsByTagName('iframe')[0]
                     console.log("iframe id:", iframe.getAttribute('id'))
                     const height = iframe.contentDocument.body.clientHeight
-                    if (height !== 0) {
-                        iframe.style.height = height + 'px';
+                    if ((option.iframe) &&(option.iframe.height)) {
+                        iframe.style.height = parseInt(option.iframe.height) + 'px'
                     } else {
-                        setTimeout((iframe) => {
-                            const height = iframe.contentDocument.body.clientHeight
-                            const id = iframe.getAttribute('id')
-                            console.log('fire:iframe:', height, " id:", id)
-                            if (height !== 0) {
-                                iframe.style.height = height + 'px';
-                            }
-                        }, 1000, iframe)
-                        // iframe.setAttribute('style', 'display:none')
+                        if (height !== 0) {
+                            iframe.style.height = height + 'px';
+                        } else {
+                            setTimeout((iframe) => {
+                                const height = iframe.contentDocument.body.clientHeight
+                                const id = iframe.getAttribute('id')
+                                console.log('fire:iframe:', height, " id:", id)
+                                if (height !== 0) {
+                                    iframe.style.height = height + 'px';
+                                }
+                            }, 1000, iframe)
+                            // iframe.setAttribute('style', 'display:none')
+                        }
+                        // console.log('lang:', repl.lang, " height:", height)
                     }
-                    console.log('lang:', repl.lang, " height:", height)
+                    
                 }
             }).catch((e) => {
                 repl.outputHolder.appendChild(repl.appendConsoleLine(e, 'error'))
             })
+            console.log('runInContext out:')
         })
         // クリアボタン押下
         clrBtn.addEventListener('click', () => {
@@ -483,7 +490,7 @@ export class CodeMirrorRepl {
                     this.iframeView_chkbox.checked = false
                 }
             }
-            if (result.config.hasOwnProperty('script')) {
+            if (result.config.hasOwnProperty('script') && (options.type !== 'HTML')) {
                 if (result.config.script === 'script') {
                     this.script_chkbox.checked = true
                 } else {
@@ -495,6 +502,9 @@ export class CodeMirrorRepl {
                 if (result.config.sandbox !== '') {
                     options.sandbox = result.config.sandbox
                 }
+            }
+            if (result.config.hasOwnProperty('iframe')) {
+                options.iframe = result.config.iframe
             }
             console.log(result.config)
             delete result.config
