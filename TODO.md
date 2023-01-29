@@ -1,4 +1,5 @@
 * TODO
+- [ ] 長いドキュメントの場合にPagination
 - [ ] attach external css/script using YAML front matter
 - [ ] スクロールに応じた見出しの強調 [スクロールスパイ～Bootstrap5設置ガイド](https://bootstrap-guide.com/components/scrollspy)
     https://getbootstrap.jp/docs/5.0/components/scrollspy/
