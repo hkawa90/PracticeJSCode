@@ -13,6 +13,6 @@ export function assertEvent(element, type, information) {
     const target = element || document
     const t = type || 'app'
     const info = information || {}
-    const event = new CustomEvent(type, { detail: information });
+    const event = new CustomEvent(type, { detail: info });
     target.dispatchEvent(event)
 }
