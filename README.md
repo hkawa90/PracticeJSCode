@@ -80,7 +80,7 @@ const yamlStr = `---
 age:127
 ---
 ```
-その結果は、以下の通りエラー(例外)となるので表記に気をつける必要がある。**これはYAMLの仕様です。**[YAML 構文 — Ansible Documentation](https://docs.ansible.com/ansible/2.9_ja/reference_appendices/YAMLSyntax.html)が参考になります。
+その結果は、以下の通りエラー(例外)となるので記述に気をつける必要がある。**これはYAMLの仕様です。**[YAML 構文 — Ansible Documentation](https://docs.ansible.com/ansible/2.9_ja/reference_appendices/YAMLSyntax.html)が参考になります。
 
 ```shell
 $ node yam.mjs
