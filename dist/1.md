@@ -346,3 +346,10 @@ function isHidden(elem) {
 
 * 起動時のコード実行で、コード評価管理用語にiframeの高さを`clientHeight`で調整するが、初回はレンダリングが間に合わないのか`0`となる。workaroundで`0`の場合はデフォルトの高さのままとする。
     * 親要素が`display:none`な状態でiframe内でrenderingされた場合、`clientHeight`が0になるようなので、`display:none`が解除された段階でコード実行するよう変更
+
+* JSDoc
+    - [JSDoc で JavaScript のコメントを書こう | スターフィールド株式会社](https://sterfield.co.jp/designer/jsdoc-%E3%81%A7-javascript-%E3%81%AE%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86/)
+    - [Use JSDoc: Index](https://jsdoc.app/index.html)
+
+* ページレイアウトは[ダッシュボードの実例～Bootstrap5設置ガイド](https://bootstrap-guide.com/sample/dashboard)を参考にした。
+* Bootstrap5の導入は[webpackでの使用～Bootstrap5設置ガイド](https://bootstrap-guide.com/getting-started/webpack)を参考にした。
