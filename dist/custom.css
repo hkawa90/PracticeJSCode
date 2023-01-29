@@ -3,5 +3,16 @@
 }
 
 body {
-    background-color: #cce0cc;
+    background-color: #c1f7c1;
+}
+
+/* change root font size */
+html {
+    font-size: 120%;
+}
+
+iframe.repl-viewer {
+    width: 80%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;  /* またはcover */
 }
