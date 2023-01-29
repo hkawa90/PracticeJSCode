@@ -16,6 +16,7 @@ import { repositionTooltips } from '@codemirror/view'
 import { DataSet, Timeline } from "vis-timeline/standalone";
 import { loadFront } from "yaml-front-matter"
 import { genId } from './util'
+import { assertEvent } from './util'
 
 class PracticeEditor {
     constructor(options) {
@@ -312,7 +313,7 @@ export class CodeMirrorRepl {
             } else { // html
                 option = { type: "HTML", view: repl.iframeView_chkbox.checked }
             }
-            repl.iframeHolder.setAttribute('style', '')
+            repl.iframeHolder.removeAttribute('style')
             option.embeddedElement = repl.iframeHolder
             option.extScript = repl.options.extScript
 
@@ -450,7 +451,13 @@ export class CodeMirrorRepl {
         Object.freeze(this)
     }
     parseConfig() {
-        const result = loadFront(this.editor.getText())
+        let result = ""
+        try {
+            result = loadFront(this.editor.getText())
+        } catch (e) {
+            assertEvent(document, 'assertion', e)
+            console.log(e)
+        }       
         return result
     }
     /**

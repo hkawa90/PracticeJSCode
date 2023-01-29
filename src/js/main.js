@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     cmTheme: bookInfo.cmTheme,
     extScript: bookInfo.extScript
   }, codeRepl)
- 
+
   // highlight
   document.querySelectorAll('pre code').forEach((el) => {
     const className = el.getAttribute('class')
@@ -39,4 +39,10 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     }
   })
+  document.addEventListener('assertion', function (e) {
+    const element = document.getElementById("MainDangerMessage")
+    element.innerText = e
+    element.parentElement.classList.remove('d-none')
+  }, false);
+
 })

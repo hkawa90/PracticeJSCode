@@ -3,6 +3,7 @@ import * as DOMPurify from 'dompurify'
 import mermaid from "mermaid"
 import { loadFront } from "yaml-front-matter"
 import codeRepl from './codeRepl'
+import { assertEvent } from './util'
 
 export default async function createDocFromMd(mdOptions, dstElement = null, tocElement = null) {
     const toc = tocElement || document.getElementById('TOC')
@@ -44,9 +45,16 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
         const bookInfo = JSON.parse(await fetchData('/book.config.json'))
         if (bookInfo) {
             for (let i = 0; i < bookInfo.chapters.length; i++) {
-                const result = loadFront(await fetchData(bookInfo.chapters[i].file))
-                bookInfo.chapters[i].src = result.__content
                 // set yaml front matter
+                let result = ""
+                try {
+                    result = loadFront(await fetchData(bookInfo.chapters[i].file))
+                } catch (e) {
+                    assertEvent(document, 'assertion', e)
+                    console.log(e)
+                }
+                bookInfo.chapters[i].src = result.__content
+
                 delete result.__content
                 bookInfo.chapters[i].yfm = result
             }
@@ -130,7 +138,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                     if (p.toString() === page) {
                         document.getElementById(secListHref).setAttribute('class', 'collapse show')
                         const chapPage = document.getElementById('chap-' + p + '-content')
-                        chapPage.setAttribute('style', '')
+                        chapPage.removeAttribute('style')
                         if (chapPage.dataset.mdInit === "false") {
                             // mermaid
                             const me = chapPage.querySelectorAll('.language-mermaid')
@@ -153,7 +161,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             const secList = document.createElement('div')
             secList.setAttribute('class', 'collapse')
             secList.setAttribute('id', secListHref)
-            secList.setAttribute('style', '')
+            secList.removeAttribute('style')
             chapLi.appendChild(secList)
             const secUl = document.createElement('ul')
             secUl.setAttribute('class', 'btn-toggle-nav list-unstyled fw-normal pb-1 small')
