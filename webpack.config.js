@@ -1,5 +1,5 @@
 const path = require('path')
-
+const devMode = process.env.NODE_ENV !== 'production'
 module.exports = {
   entry: './src/js/main.js',
   output: {
@@ -80,5 +80,9 @@ module.exports = {
       net: false,
       tls: false
     }
-  }
+  },
+  devtool: devMode ? 'source-map' : 'eval',
+  watchOptions: {
+    ignored: /node_modules/
+  },
 }
