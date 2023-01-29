@@ -16,3 +16,18 @@ export function assertEvent(element, type, information) {
     const event = new CustomEvent(type, { detail: info });
     target.dispatchEvent(event)
 }
+
+/**
+ * URL validiation check
+ * @param {string} string URL文字列か検査対象文字列
+ * @returns {boolean} URL文字列であればtrue
+ */
+export function isValidHttpUrl(string) {
+    let url;
+    try {
+        url = new URL(string);
+    } catch (_) {
+        return false;
+    }
+    return url.protocol === "http:" || url.protocol === "https:";
+}

@@ -3,7 +3,7 @@ import * as DOMPurify from 'dompurify'
 import mermaid from "mermaid"
 import { loadFront } from "yaml-front-matter"
 import codeRepl from './codeRepl'
-import { assertEvent } from './util'
+import { assertEvent, isValidHttpUrl } from './util'
 
 export default async function createDocFromMd(mdOptions, dstElement = null, tocElement = null) {
     const toc = tocElement || document.getElementById('TOC')
@@ -19,8 +19,13 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
 
     async function getBookInfo() {
         async function fetchData(file) {
-            const url = document.location
-            let r = fetch(url + file)
+            let url = ""
+            if (isValidHttpUrl(file)) {
+                url = file
+            } else {
+                url = document.location + file
+            }
+            let r = fetch(url, { mode: 'cors' })
                 .then((response) => {
                     if ((response) && (response.body)) {
                         return response.body.getReader().read()
