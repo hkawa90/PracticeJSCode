@@ -14,7 +14,7 @@ mermaid.initialize({ startOnLoad: false })
 
 document.addEventListener('DOMContentLoaded', async function () {
   // Error通知表示
-  document.addEventListener('hoge', function (e) {
+  document.addEventListener('assertion', function (e) {
     const element = document.getElementById("MainDangerMessage")
     element.innerText = e.detail
     element.parentElement.classList.remove('d-none')
