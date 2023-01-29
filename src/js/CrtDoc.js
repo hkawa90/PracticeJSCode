@@ -171,7 +171,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                 const ul = document.createElement('li')
                 const anchor = document.createElement('a')
                 anchor.setAttribute('href', '#' + item[1].getAttribute('id'))
-                anchor.setAttribute('class', 'link-dark rounded text-wrap text-break')
+                anchor.setAttribute('class', 'link-dark rounded text-wrap text-break ms-4')
                 anchor.setAttribute('style', 'width:10rem;')
                 anchor.innerText = item[1].getAttribute('id')
                 ul.append(anchor)
