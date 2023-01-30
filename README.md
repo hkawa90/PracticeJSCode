@@ -147,6 +147,24 @@ const button = document.createElement('button')
 button.innerText = "button"
 document.body.appendChild(button)
 ```
+下記の内容がエラー出力されたら、`script`チェックボックスをOffとしてください。
+
+```text
+SyntaxError: await is only valid in async functions, async generators and modules
+```
+そうすると、次の`await`を含む[コード](https://web.dev/i18n/ja/storage-for-the-web/)を実行できます。
+
+```javascript
+if (navigator.storage && navigator.storage.estimate) {
+  const quota = await navigator.storage.estimate();
+  // quota.usage -> Number of bytes used.
+  // quota.quota -> Maximum number of bytes available.
+  const percentageUsed = (quota.usage / quota.quota) * 100;
+  console.log(`You've used ${percentageUsed}% of the available storage.`);
+  const remaining = quota.quota - quota.usage;
+  console.log(`You can write up to ${remaining} more bytes.`);
+}
+```
 
 ### HTMLコード実行
 
@@ -353,3 +371,30 @@ function isHidden(elem) {
 
 * ページレイアウトは[ダッシュボードの実例～Bootstrap5設置ガイド](https://bootstrap-guide.com/sample/dashboard)を参考にした。
 * Bootstrap5の導入は[webpackでの使用～Bootstrap5設置ガイド](https://bootstrap-guide.com/getting-started/webpack)を参考にした。
+
++ git archive: リリース要のtar/zip ball作成
+GithubであればRelease使えばいらないかもしれないが。
+```shell
+#!/usr/bin/env bash
+
+$tag = $1 
+$project = $2
+# Create a compressed tarball.
+git archive --format=tar --prefix=$2-$1/ $1 | gzip > $2-$1.tar.gz  
+# Create a compressed zipball.
+git archive --format=zip --prefix=$2-$1/ $1 > $2-$1.zip  
+```
+
+* package.jsonのversion変更
+[jq](https://stedolan.github.io/jq/)を使う方法。
+```shell
+version=$(git describe --tags --abbrev=0) # latest tag
+jq \'.version=\"$version\"\' package.json
+```
+
+* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)ではコメントのみだと例外発生(conf is null)。
+```YAML
+---
+#
+---
+```
