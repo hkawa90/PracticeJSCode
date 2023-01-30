@@ -35,6 +35,10 @@
         {
             "file": "/5.md",
             "name": "HideオプションによるChart表示"
+        },
+        {
+            "file": "/BlankPage.md",
+            "name": "Blank Page/Sandbox"
         }
     ]
 }
