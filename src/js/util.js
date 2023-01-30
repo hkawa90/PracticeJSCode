@@ -7,12 +7,18 @@ export function genId() {
  * モジュールなどで例外発生をWeb Pageに表示するためのイベントです
  * @param {Element} element dispatchEvent()するEventTarget
  * @param {String} type Event name
- * @param {String} information Detail information of Event
+ * @param {String|Error} information Detail information of Event
  */
 export function assertEvent(element, type, information) {
     const target = element || document
     const t = type || 'app'
-    const info = information || {}
+    let info = information || {}
+    if (information instanceof Error) {
+        info = information.name + ': ' + information.message + '\n'
+        if (information.stack) {
+            info += "Stack:" + information.stack
+        }
+    }
     const event = new CustomEvent(type, { detail: info });
     target.dispatchEvent(event)
 }
