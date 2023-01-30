@@ -1,4 +1,9 @@
 * TODO
+- [ ] [ウェブ用ストレージ](https://web.dev/i18n/ja/storage-for-the-web/)
+- [ ] [最新版で学ぶwebpack 5入門 - Babel 7でES2021環境の構築(React, Vue, Three.js, jQueryのサンプル付き) - ICS MEDIA](https://ics.media/entry/16028/)
+- [ ] jsmind★, mind-wired
+- [ ] [Javascriptで簡単にMindmapを作成 jsMind | SE人生ログ](https://se-log.blogspot.com/2019/10/jsmind.html)
+- [ ] bookmark:scrollTop, Cache API/Web storageで保持
 - [ ] 長いドキュメントの場合にPagination
 - [ ] attach external css/script using YAML front matter
 - [ ] スクロールに応じた見出しの強調 [スクロールスパイ～Bootstrap5設置ガイド](https://bootstrap-guide.com/components/scrollspy)
