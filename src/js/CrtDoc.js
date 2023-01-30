@@ -43,6 +43,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                     }
                 })
                 .catch((e) => {
+                    assertEvent(document, 'assertion', e)
                     console.log("Fetch error: ", e)
                 })
             return r
