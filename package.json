@@ -5,8 +5,10 @@
   "source": "src/main.js",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
+    "appStart": "node ./server/index.js ./dist",
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
+    "build:debug": "webpack --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
