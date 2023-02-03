@@ -52,7 +52,7 @@ markdown文書からWebページを生成します。fenced code blockのJavascr
 * fenced code blockで[Mermaid | Diagramming and charting tool](https://mermaid.js.org/)でdiagram表示
 * CSSフレームワークの[Introduction · Bootstrap v5.0](https://getbootstrap.com/docs/5.0/getting-started/introduction/)を使用。Webページのレイアウトに[Bootstrap 5 Sidebar Examples - DEV Community 👩‍💻👨‍💻](https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb)を参考にした。
 * [markedjs/marked: A markdown parser and compiler. Built for speed.](https://github.com/markedjs/marked)でmarkdownをブラウザ上でHTMLへ変換
-* 通常のfenced code blockは`highlight.js`を使用
+* 通常のfenced code blockは[highlight.js](https://highlightjs.org/)を使用
 * [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を使ってmetadata取得の実装(ただ取得までの実装、メモに使える?)。JSコード実行では、実行時の動作設定とローカル変数としてアクセス可能。記法についての注意点があるので、下記を参考にしてください。
 ```javascript
 import yamlFront from 'yaml-front-matter'
@@ -398,3 +398,7 @@ jq \'.version=\"$version\"\' package.json
 #
 ---
 ```
+* firefox + VSCode debug
+- ["url": "http://localhost/index.html",](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug)
+
+* [ウェブ用ストレージ](https://web.dev/i18n/ja/storage-for-the-web/)
