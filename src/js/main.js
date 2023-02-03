@@ -6,6 +6,7 @@ import hljs from 'highlight.js'
 import { CodeMirrorRepl } from './CodeMirrorRepl'
 import createDocFromMd from './CrtDoc'
 import codeRepl from './codeRepl'
+import { BookmarkManager, addBokmarkHandler, buildBookmarkUI } from './bookmark'
 
 import '../scss/styles.scss'
 
@@ -45,5 +46,44 @@ document.addEventListener('DOMContentLoaded', async function () {
         hljs.highlightElement(el)
       }
     }
+  })
+
+  /**
+   * Create BookmarkManager and Initialize
+   */
+  const bookmark = new BookmarkManager('PracticeJS')
+
+  if ((bookmark !== undefined) && (bookmark !== null) &&
+    (bookInfo !== undefined) && (bookInfo !== null) &&
+    (bookInfo.chapters !== undefined) && (bookInfo.chapters !== null) &&
+    ((typeof bookInfo.chapters) === 'object') &&
+    (bookInfo.chapters.length >= 1) &&
+    (bookInfo.chapters[0].src !== undefined) && (bookInfo.chapters[0].src !== null) &&
+    ((typeof bookInfo.chapters[0].src) === 'string')) {
+    bookmark.init(bookInfo.chapters[0].src)
+  }
+
+  /**
+   * Build bookmakr UI
+   */
+  buildBookmarkUI(bookmark)
+
+  /**
+  * bootstrapのdropdown
+  * @description
+  * bootstrapのdropdownのイベント処理は.dropdownのイベントhidden.bs.dropdownなどを使って
+  *     行う。event.clickEvent.originalTargetで発生元を特定できるようだ。
+  *     dropdownの項目にユニークなIDをつければそのID別に処理すればいいので、
+  *     drpdownには１つのイベントリスナーで実現できる。
+  */
+  document.getElementById('add-bookmark').addEventListener('hidden.bs.dropdown', (evt) => {
+    if (evt.clickEvent) {
+      addBokmarkHandler(document.getElementById('CONTENTS'), bookmark, evt.clickEvent.originalTarget)
+    }
+    return false
+  })
+  document.addEventListener('beforeunload', () => {
+    console.log('page transaction...')
+    location.href = location.href.split('#')[0]
   })
 })

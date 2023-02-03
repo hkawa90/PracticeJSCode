@@ -10,11 +10,34 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <nav id="sidebarMenu" class="fixed-top col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <!-- TOC -->
                     <h2 class="border-bottom">目次</h2>
                     <ul class="nav flex-column" id="TOC"></ul>
+                    <!-- bookmark -->
+                    <div class="border-top dropdown" id="add-bookmark">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                <path
+                                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                            </svg>
+                            <i class="bi bi-bookmark-check"></i>
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="#" id="add-bookmark-item">bookmark追加</a></li>
+                            <div class="dropdown-divider" id="bookmark-ins"></div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <a target="_blank"
+                        href="https://icons8.com/icon/Nd2NsHS52GER/%E3%82%B3%E3%83%BC%E2%80%8B%E2%80%8B%E3%83%89">コー​​ド</a>
+                    icon by <a target="_blank" href="https://icons8.com">Icons8</a>
                 </div>
             </nav>
 
@@ -50,13 +73,12 @@
                         </div>
                     </div>
                     <!-- Main Content -->
-                    <div id="CONTENTS"></div>
+                    <div id="CONTENTS" class="overflow-auto"></div>
                 </div>
 
             </main>
         </div>
     </div>
-
     <script src="./main.bundle.js"></script>
 </body>
 

@@ -23,7 +23,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             if (isValidHttpUrl(file)) {
                 url = file
             } else {
-                url = document.location + file
+                url = document.location.href.split('#')[0] + file
             }
             let r = fetch(url, { mode: 'cors' })
                 .then((response) => {
@@ -95,7 +95,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             // insert markdown DOM
             const source = bookInfo.chapters[i].src.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "")
             const mdElement = document.createElement('div')
-            mdElement.setAttribute('id', 'chap-' + i + '-content')
+            mdElement.setAttribute('id', 'chap-content-' + i)
             if (i !== 0) {
                 mdElement.setAttribute('style', 'display:none')
                 mdElement.setAttribute('data-md-init', 'false')
@@ -117,11 +117,11 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             chap.setAttribute('class', 'btn btn-toggle align-items-center rounded')
             chap.setAttribute('data-bs-toggle', 'collapse')
 
-            const secListHref = 'chap' + i + '-collapse'
+            const secListHref = 'chap-collapse-' + i
             chap.setAttribute('data-bs-target', '#' + secListHref)
             chap.setAttribute('aria-expanded', 'true')
             const chapText = document.createElement('div')
-            chapText.setAttribute('class', 'text-wrap text-break text-start')
+            chapText.setAttribute('class', 'text-wrap text-break text-start chap-item')
             chapText.setAttribute('style', "width:12rem;")
             chapText.setAttribute('data-chapter-page', i)
             chapText.innerText = bookInfo.chapters[i].name
@@ -140,10 +140,10 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                 }
                 const page = evt.target.dataset.chapterPage
                 for (let p = 0; p < bookInfo.chapters.length; p++) {
-                    const secListHref = 'chap' + p + '-collapse'
+                    const secListHref = 'chap-collapse-' + p
                     if (p.toString() === page) {
                         document.getElementById(secListHref).setAttribute('class', 'collapse show')
-                        const chapPage = document.getElementById('chap-' + p + '-content')
+                        const chapPage = document.getElementById('chap-content-' + p)
                         chapPage.removeAttribute('style')
                         if (chapPage.dataset.mdInit === "false") {
                             // mermaid
@@ -156,9 +156,12 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                         }
                     } else {
                         document.getElementById(secListHref).setAttribute('class', 'collapse')
-                        document.getElementById('chap-' + p + '-content').setAttribute('style', 'display:none')
+                        document.getElementById('chap-content-' + p).setAttribute('style', 'display:none')
                     }
                 }
+                // Dispatch completion event
+                let cevent = new CustomEvent('ChangeChapterEnded')
+                document.dispatchEvent(cevent)
             })
             chap.appendChild(chapText)
             toc.appendChild(chapLi)
