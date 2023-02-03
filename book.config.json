@@ -2,6 +2,13 @@
     "title": "Practice JS Coce",
     "style": "custom.css",
     "cmTheme": "githubLight",
+    "express": {
+        "document_root": [
+            "./dist",
+            "./test",
+            "./src/js"
+        ]
+    },
     "extScript": [
         "https://cdn.plot.ly/plotly-2.17.1.min.js"
     ],
@@ -21,20 +28,20 @@
             "name": "README"
         },
         {
-            "file": "/2.md",
-            "name": "Mermaid Example"
+            "file": "/Markdown_Example.md",
+            "name": "Markdown Example"
         },
         {
-            "file": "/3.md",
-            "name": "JSコード実行サンプル"
+            "file": "/CodeRepl.md",
+            "name": "JS/HTMLコード実行サンプル"
         },
         {
-            "file": "/4.md",
-            "name": "HTMLコード実行サンプル"
-        },
-        {
-            "file": "/5.md",
+            "file": "/Embedded.md",
             "name": "HideオプションによるChart表示"
+        },
+        {
+            "file": "/Test.md",
+            "name": "Mocha in the browser"
         },
         {
             "file": "/BlankPage.md",
