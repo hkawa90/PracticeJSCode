@@ -8,7 +8,8 @@
             "./dist",
             "./test",
             "./src/js"
-        ]
+        ],
+        "convert_markdown" : true
     },
     "extScript": [
         "https://cdn.plot.ly/plotly-2.17.1.min.js"
