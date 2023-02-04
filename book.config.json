@@ -2,6 +2,7 @@
     "title": "Practice JS Coce",
     "style": "custom.css",
     "cmTheme": "githubLight",
+    "hash" : "884694117",
     "express": {
         "document_root": [
             "./dist",
