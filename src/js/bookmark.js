@@ -49,8 +49,18 @@ export class BookmarkManager {
         this.storage = new LocalStorage()
         this.appName = appName
     }
-    init(doc) {
-        this.hash = this.hashCode(doc)
+    init(option) {
+        if (option.hash &&
+            ((typeof option.hash) === 'string') &&
+            ((typeof option.hash) === 'number')) {
+            if (typeof option.hash === 'string') {
+                this.hash = parseInt(option.hash)
+            } else {
+                this.hash = option.hash
+            }
+        } else if (option.doc && ((typeof option.doc) === 'string')) {
+            this.hash = this.hashCode(option.doc)
+        }
     }
     /**
      * Unicode 文字列で、各 16 ビット単位を 1 バイトしか占有しない文字列に変換します。
@@ -68,7 +78,7 @@ export class BookmarkManager {
         let result = "";
         charCodes.forEach((char) => {
             result += String.fromCharCode(char);
-        });
+        })
         return result;
     }
     /**
@@ -221,7 +231,7 @@ export function addBokmarkHandler(targetElement, bookmark, clickElement) {
         console.log('setScroll:', window)
         let target = (targetElement || window)
         setTimeout(() => {
-            window.scrollTo(0, scroll)    
+            window.scrollTo(0, scroll)
         }, 300);
         document.removeEventListener('ChangeChapterEnded', setScroll)
     }

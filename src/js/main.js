@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     (bookInfo.chapters.length >= 1) &&
     (bookInfo.chapters[0].src !== undefined) && (bookInfo.chapters[0].src !== null) &&
     ((typeof bookInfo.chapters[0].src) === 'string')) {
-    bookmark.init(bookInfo.chapters[0].src)
+    bookmark.init({ doc: bookInfo.chapters[0].src, hash: bookInfo.hash })
   }
 
   /**
