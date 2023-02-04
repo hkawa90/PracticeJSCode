@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import * as DOMPurify from 'dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 import mermaid from "mermaid"
 import { loadFront } from "yaml-front-matter"
 import codeRepl from './codeRepl'

@@ -1,5 +1,5 @@
 import {genId} from './util'
-import hooker from 'hooker'
+// import hooker from 'hooker'
 
 // License: MIT
 // https://github.com/syumai/sandboxed-eval

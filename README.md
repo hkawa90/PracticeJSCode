@@ -402,3 +402,131 @@ jq \'.version=\"$version\"\' package.json
 - ["url": "http://localhost/index.html",](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug)
 
 * [ウェブ用ストレージ](https://web.dev/i18n/ja/storage-for-the-web/)
+
+## Vite/pnpmへ移行
+
+### pnpm 導入
+[Fast, disk space efficient package manager | pnpm](https://pnpm.io/ja/)を参考に導入
+
+```shell
+$ curl -fsSL https://get.pnpm.io/install.sh | sh -
+==> Downloading pnpm binaries 7.26.3
+Copying pnpm CLI from /tmp/tmp.x5zfOs8vtV/pnpm to /home/kawa90/.local/share/pnpm/pnpm
+Appended new lines to /home/kawa90/.bashrc
+
+Next configuration changes were made:
+export PNPM_HOME="/home/kawa90/.local/share/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+To start using pnpm, run:
+source /home/kawa90/.bashrc
+$ source /home/kawa90/.bashrc
+```
+
+### Vite導入
+
+[Vite | 次世代フロントエンドツール](https://ja.vitejs.dev/)を参考に導入
+
+```shell
+$ pnpm create vite my-vue-app --template vanilla
+$ cd my-vue-app
+$ pnpm install
+$ pnpm dev
+  VITE v4.1.1  ready in 584 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h to show help
+```
+
+インストール後のディレクトリ構成:
+
+```
+.
+├── counter.js
+├── index.html
+├── javascript.svg
+├── main.js
+├── node_modules
+│   └── vite -> .pnpm/vite@4.1.1/node_modules/vite
+├── package.json
+├── pnpm-lock.yaml
+├── public
+│   └── vite.svg
+└── style.css
+```
+
+`package.json`の`scripts`:
+
+```
+{
+  "scripts": {
+    "dev": "vite", // 開発サーバを起動。エイリアス: `vite dev`, `vite serve`
+    "build": "vite build", // プロダクション用にビルド
+    "preview": "vite preview" // プロダクション用ビルドをローカルでプレビュー
+  }
+}
+```
+
+下記を参考に諸設定
+
+- [Vite + vanilla-ts+SCSS環境を作る](https://zenn.dev/one_dock/articles/f694d8235cd388)
+- [プラグインの使用 | Vite](https://ja.vitejs.dev/guide/using-plugins.html)
+
+bootstrap5の導入:
+
+```shell
+pnpm add bootstrap @popperjs/core
+pnpm add -D sass autoprefixer postcss
+```
+autoprefixer:
+
+```.browserslistrc
+last 2 versions
+android >= 4
+iOS >= 10
+not dead
+```
+vite.config.js: 最終版は実ファイルを参照してください。
+
+```vite.config.js
+import { defineConfig } from "vite";
+import autoprefixer from "autoprefixer";
+
+export default defineConfig(({ command }) => {
+  if (command === "serve") {
+    //開発環境設定
+    return {
+      server: {
+        port: 8000,
+      },
+    };
+  } else {
+    //本番環境設定
+    return {
+      css: {
+        postcss: {
+          plugins: [autoprefixer],
+        },
+      },
+    };
+  }
+});
+```
+
+`pnpm add`の結果`umet peer`となる。正しい動作にならない場合があるので解消しておく。
+
+```
+ WARN  Issues with peer dependencies found
+.
+├─┬ vis-data 7.1.4
+│ └── ✕ unmet peer uuid@"^7.0.0 || ^8.0.0": found 9.0.0
+└─┬ vis-timeline 7.7.0
+  └── ✕ unmet peer uuid@"^3.4.0 || ^7.0.0 || ^8.0.0": found 9.0.0
+```
+
+unmet peerを解消:
+
+```shell
+$ pnpm add uuid@"^7.0.0 || ^8.0.0"
+```
