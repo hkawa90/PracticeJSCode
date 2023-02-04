@@ -27,7 +27,8 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             }
             let r = fetch(url, { mode: 'cors' })
                 .then((response) => {
-                    if ((response) && (response.body)) {
+                    console.log('HTTP Response:', response)
+                    if ((response) && (response.body) && (response.ok)) {
                         return response.body.getReader().read()
                     } else {
                         return Promise.reject(
@@ -43,26 +44,34 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                     }
                 })
                 .catch((e) => {
-                    assertEvent(document, 'assertion', e)
-                    console.log("Fetch error: ", e)
+                    throw e
                 })
             return r
         }
-        const bookInfo = JSON.parse(await fetchData('/book.config.json'))
+        let bookInfo = null
+        try {
+            bookInfo = JSON.parse(await fetchData('/book.config.json'))
+        } catch (e) {
+            // do nothing
+        }
         if (bookInfo) {
             for (let i = 0; i < bookInfo.chapters.length; i++) {
-                // set yaml front matter
-                let result = ""
-                try {
-                    result = loadFront(await fetchData(bookInfo.chapters[i].file))
-                } catch (e) {
-                    assertEvent(document, 'assertion', e)
-                    console.log(e)
+                if (bookInfo.express && bookInfo.express.convert_markdown) {
+                    if (bookInfo.express.convert_markdown === true) {
+                        try {
+                            bookInfo.chapters[i].html = await fetchData(bookInfo.chapters[i].file.replace(/\.[^/.]+$/, ".html"))
+                            console.log(bookInfo.chapters[i].html)
+                            console.log('Use HTML file...', bookInfo.chapters[i].file.replace(/\.[^/.]+$/, ".html"))
+                        } catch (e) {
+                            console.log('Try to download Markdown file...', e)
+                            bookInfo.chapters[i].src = await fetchData(bookInfo.chapters[i].file)
+                            console.log('Use Markdown file...')
+                        }        
+                    }
                 }
-                bookInfo.chapters[i].src = result.__content
-
-                delete result.__content
-                bookInfo.chapters[i].yfm = result
+                if (!bookInfo.chapters[i].src) {
+                    bookInfo.chapters[i].src = await fetchData(bookInfo.chapters[i].file)
+                }
             }
         }
         return bookInfo
@@ -92,8 +101,8 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
         // set page title
         document.getElementsByTagName('title')[0].innerText = bookInfo.title
         for (let i = 0; i < bookInfo.chapters.length; i++) {
-            // insert markdown DOM
-            const source = bookInfo.chapters[i].src.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "")
+            let source = null
+
             const mdElement = document.createElement('div')
             mdElement.setAttribute('id', 'chap-content-' + i)
             if (i !== 0) {
@@ -105,8 +114,14 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                 await mermaid.init(undefined, me)
                 mdElement.setAttribute('data-md-init', 'true')
             }
-            mdElement.innerHTML =
-                DOMPurify.sanitize(marked.parse(source))
+            // insert markdown DOM
+            if (bookInfo.chapters[i].html) {
+                mdElement.innerHTML = bookInfo.chapters[i].html
+            } else {
+                source = bookInfo.chapters[i].src.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "")
+                mdElement.innerHTML =
+                    DOMPurify.sanitize(marked.parse(source))
+            }
             content.appendChild(mdElement)
             // create TOC from DOM
             const headingList = mdElement.querySelectorAll('h1,h2,h3,h4,h5,h6')
