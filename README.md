@@ -20,27 +20,46 @@ Demo site: [Practice JS Coce](https://hkawa90.github.io/PracticeJSCode/)
 
 Node.jsを使っています。環境に合わせて[ダウンロード | Node.js](https://nodejs.org/ja/download/)からインストールします。
 
-2. yarnのインストール
+2. pnpmのインストール
 
-Package Managerの[Home | Yarn - Package Manager](https://yarnpkg.com/)使用しているので、[Installation | Yarn - Package Manager](https://yarnpkg.com/getting-started/install)を参考にインストールします。
-
-3. moduleのインストール
+[Fast, disk space efficient package manager | pnpm](https://pnpm.io/ja/)を参考に導入してください。下記は`Linux`での例です。
 
 ```shell
-yarn install
+$ curl -fsSL https://get.pnpm.io/install.sh | sh -
+==> Downloading pnpm binaries 7.26.3
+Copying pnpm CLI from /tmp/tmp.x5zfOs8vtV/pnpm to /home/kawa90/.local/share/pnpm/pnpm
+Appended new lines to /home/kawa90/.bashrc
+
+Next configuration changes were made:
+export PNPM_HOME="/home/kawa90/.local/share/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+To start using pnpm, run:
+source /home/kawa90/.bashrc
+$ source /home/kawa90/.bashrc
+```
+
+3. モジュールのインストール
+
+パッケージマネージャの`pnpm`を使ってインストールします。
+
+```shell
+pnpm install
 ```
 
 ## Build
 
+`pnpm`から`vite`を起動してビルドします.
+
 ```shell
-yarn run build
+pnpm build
 ```
 ## 実行
 
-サンプル文書はdistファオルダにある。そのまま実行する場合は以下を実行してブラウザで開く。ブラウザでは`http://localhost:8080/`をオープンします。
+サンプル文書(Markdown)はdistファオルダにあります。そのまま実行する場合は以下を実行してブラウザで開く。ブラウザでは`http://localhost:8080/`をオープンします。
 
 ```shell
-yarn run start
+pnpm dev
 ```
 ## 特徴
 
@@ -53,7 +72,8 @@ markdown文書からWebページを生成します。fenced code blockのJavascr
 * CSSフレームワークの[Introduction · Bootstrap v5.0](https://getbootstrap.com/docs/5.0/getting-started/introduction/)を使用。Webページのレイアウトに[Bootstrap 5 Sidebar Examples - DEV Community 👩‍💻👨‍💻](https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb)を参考にした。
 * [markedjs/marked: A markdown parser and compiler. Built for speed.](https://github.com/markedjs/marked)でmarkdownをブラウザ上でHTMLへ変換
 * 通常のfenced code blockは[highlight.js](https://highlightjs.org/)を使用
-* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を使ってmetadata取得の実装(ただ取得までの実装、メモに使える?)。JSコード実行では、実行時の動作設定とローカル変数としてアクセス可能。記法についての注意点があるので、下記を参考にしてください。
+* [dworthen/js-yaml-front-matter: Parses yaml or json from the beginning of a string or file](https://github.com/dworthen/js-yaml-front-matter)を使って、JSコード実行では、実行時の動作設定とローカル変数としてアクセス可能。YAML記法についての注意点があるので、下記を参考にしてください。
+
 ```javascript
 import yamlFront from 'yaml-front-matter'
 
@@ -204,6 +224,10 @@ markdown文書のHTML変換後は`id=CONTENTS`の配下に`appendChild`する。
 
 ほぼ[azu/codemirror-console: Web Console UI for JavaScript.](https://github.com/azu/codemirror-console)と同じだが、CMを最新版のV6に変更.scrpt, moduleなどに加えて、HTMLコードを実行できるように変更している。consoleのlog(),info(), warn(), error()に加えて、clear(),count(),countReset(),debug(),assert(),dir(),dirxml(),exception(),group(),groupCollapsed(),groupEnd(),profile(),profileEnd(),table(),time(),timeEnd(),timeStamp()を追加。
 
+### bookmark.js
+
+[Window.localStorage - Web API | MDN](https://developer.mozilla.org/ja/docs/Web/API/Window/localStorage)を使って、チャプタ情報とスクロール位置を記憶して、UIからその保存した位置の文書を表示します。注意点としてはlocalStorageはoriginに紐づくので、ポート番号などが変わってもアクセスができなくなります。`localStorage`はkey/value形式のため、アプリケーション名をkeyとして、ブックマーク情報をJSON化して保存します。読み取り時はその逆を行います。
+
 ## 文書作成方法
 
 章毎のMarkdown文書を作成し、`dist`フォルダに`book.config.json`を作成し、文書タイトルと章毎にファイル名とタイトルを記載。ファイル名は`dist`配下の絶対パスで指定する。styleを変更したい場合は、`style`にカスタムCSSファイルを指定できる。カスタムCSSファイルは通常のCSSファイルと同じ。また同様に、`cmTheme`でCodeMirrorのthemeを設定できる。Theme名は[material](https://www.npmjs.com/package/@uiw/codemirror-themes-all)を参照。JSコードの実行に必要な外部スクリプト(CDN)がある場合は、`extScript`に指定する。
@@ -299,7 +323,7 @@ console.log(1)
 
 あとはMarkdownに従います。
 
-## メモ
+## メモ(未整理情報)
 
 * dist配下をgh-pagesにpushしてGithub Pagesで公開
 

@@ -5,7 +5,8 @@
 プロジェクトディレクトリで以下を実行
 
 ```shell
-npm run appStart
+pnpm build
+node ./server/index.mjs ./public
 ```
 実行後、Web serverが起動します。ブラウザで`http://localhost:9999`を開いてください。
 
@@ -16,9 +17,7 @@ npm run appStart
 ```json
     "express": {
         "document_root": [
-            "./dist",
-            "./test",
-            "./src/js"
+            "./dist"
         ],
         "convert_markdown" : true
     },
@@ -26,4 +25,4 @@ npm run appStart
 
 * 複数のディレクトリを１つのドキュメントルートに設定できます。`document_root`に配列形式でディレクトリを設定してください。
 
-* ローカルでMarkdownをHTMLに変換して、`PracticeJSCode`のブラウザ側で変換しないようにすることができます。`convert_markdown`を`true`に設定します。`true`の場合このプログラムの実行でMakrdownからHTMLへ変換します。
+* ローカルでMarkdownをHTMLに変換して、`PracticeJSCode`のブラウザ側で変換しないようにすることができます。`convert_markdown`を`true`に設定します。`true`の場合このプログラムの実行でMakrdownからHTMLへ変換します。こうすると起動が早くなります。
