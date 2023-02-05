@@ -1,4 +1,4 @@
-import { hashCode } from 'local-util'
+import { hashCode, isIterable } from 'local-util'
 
 /**
  * Web StorageのlocalStorage
@@ -133,7 +133,7 @@ function addBookmarkItem(page, scroll, bookmark) {
 export function buildBookmarkUI(bookmark) {
     const bookmarks = bookmark.getBookmark()
     console.log('build:', bookmarks)
-    if (bookmarks && ((typeof bookmarks) === 'object')) {
+    if (bookmarks && ((typeof bookmarks) === 'object') && isIterable(bookmarks)) {
         console.log('build:', bookmarks)
         for (const b of bookmarks) {
             console.log('build:', b)
