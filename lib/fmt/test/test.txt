@@ -1,0 +1,59 @@
+---
+title: My Blog
+description: Like I said, my bloggg!
+example:
+  custom:
+    variables:
+    - one
+    - two
+    - three
+---
+<div class="page-header">
+  <h1>{{title}}</h1>
+  <p class="lead">{{description}}</p>
+</div>
+<ul>
+  {{#each example.custom.variables}}
+  <li>{{.}}</li>
+  {{/each}}
+</ul>
+---
+title: <%= component.name || pkg.name %>
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ titleize title }} Component</title>
+    <link rel="stylesheet" href="{{assets}}/css/{{title}}.css">
+  </head>
+  <body>
+    <div class="container">
+      <!-- {{title}} -->
+      <div class="row">
+        <div class="span3">
+          <div class="dropdown">
+            <div>User Settings</div>
+            <ul class="dropdown-menu">
+              <li><a href="#">My Profile</a></li>
+              <li><a href="#">Friend Requests</a></li>
+              <li><a href="#">Account Settings</a></li>
+              <li><a href="#">Support</a></li>
+              <li><a href="#">Log Out</a></li>
+            </ul>
+          </div>
+        </div>
+      </div><!-- /{{title}} -->
+      {{> body }}
+    </div>
+    <script src="{{assets}}/js/{{title}}.js"></script>
+  </body>
+</html>
+---
+#comment
+title: Associative arrays
+people:
+  name: John Smith
+  age: 33
+morePeople: {name: Grace Jones, age: 21}
+---

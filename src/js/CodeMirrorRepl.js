@@ -14,7 +14,8 @@ import { sublimeInit } from '@uiw/codemirror-themes-all'
 import * as themes from '@uiw/codemirror-themes-all'
 import { repositionTooltips } from '@codemirror/view'
 import { DataSet, Timeline } from "vis-timeline/standalone";
-import { loadFront } from "yaml-front-matter"
+// import { loadFront } from "yaml-front-matter"
+import YMLfmt from 'fmt'
 import { genId } from './util'
 import { assertEvent } from './util'
 
@@ -453,7 +454,8 @@ export class CodeMirrorRepl {
     parseConfig() {
         let result = ""
         try {
-            result = loadFront(this.editor.getText())
+            // result = loadFront(this.editor.getText())
+            result = new YMLfmt({ quick: true, multiBlock: false }).parse(this.editor.getText())
         } catch (e) {
             assertEvent(document, 'assertion', e)
             console.log(e)
@@ -471,25 +473,27 @@ export class CodeMirrorRepl {
         }
 
         const result = this.parseConfig()
-        let jsCode = result.__content
-        delete result.__content
-        if (result.config) {
-            if (result.config.hasOwnProperty('timeline')) {
-                if (result.config.timeline) {
+        let jsCode = result.body
+        delete result.body
+        // let jsCode = result.__content
+        // delete result.__content
+        if (result.data.config) {
+            if (result.data.config.hasOwnProperty('timeline')) {
+                if (result.data.config.timeline) {
                     this.vis_chkbox.checked = true
                 } else {
                     this.vis_chkbox.checked = false
                 }
             }
-            if (result.config.hasOwnProperty('autorun')) {
-                if (result.config.autorun) {
+            if (result.data.config.hasOwnProperty('autorun')) {
+                if (result.data.config.autorun) {
                     options.autorun = true
                 } else {
                     options.autorun = false
                 }
             }
-            if (result.config.hasOwnProperty('view')) {
-                if (result.config.view) {
+            if (result.data.config.hasOwnProperty('view')) {
+                if (result.data.config.view) {
                     options.view = true
                     this.iframeView_chkbox.checked = true
                 } else {
@@ -497,28 +501,28 @@ export class CodeMirrorRepl {
                     this.iframeView_chkbox.checked = false
                 }
             }
-            if (result.config.hasOwnProperty('script') && (options.type !== 'HTML')) {
-                if (result.config.script === 'script') {
+            if (result.data.config.hasOwnProperty('script') && (options.type !== 'HTML')) {
+                if (result.data.config.script === 'script') {
                     this.script_chkbox.checked = true
                 } else {
                     this.script_chkbox.checked = false
                 }
-                options.type = result.config.script
+                options.type = result.data.config.script
             }
-            if (result.config.hasOwnProperty('sandbox')) {
-                if (result.config.sandbox !== '') {
-                    options.sandbox = result.config.sandbox
+            if (result.data.config.hasOwnProperty('sandbox')) {
+                if (result.data.config.sandbox !== '') {
+                    options.sandbox = result.data.config.sandbox
                 }
             }
-            if (result.config.hasOwnProperty('iframe')) {
-                options.iframe = result.config.iframe
+            if (result.data.config.hasOwnProperty('iframe')) {
+                options.iframe = result.data.config.iframe
             }
-            console.log(result.config)
-            delete result.config
+            console.log(result.data.config)
+            delete result.data.config
         }
         options.sandbox = options.sandbox || "allow-scripts allow-same-origin"
         if (options.type === 'script') {
-            const yfmObj = JSON.stringify(result)
+            const yfmObj = JSON.stringify(result.data)
             const yfmOjbStr =
                 `{
                 const ___yfmobj = JSON.parse('${yfmObj}')

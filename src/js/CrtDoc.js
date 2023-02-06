@@ -1,7 +1,7 @@
 import { marked } from 'marked'
 import DOMPurify from 'isomorphic-dompurify'
 import mermaid from "mermaid"
-import { loadFront } from "yaml-front-matter"
+//import { loadFront } from "yaml-front-matter"
 import codeRepl from './codeRepl'
 import { assertEvent, isValidHttpUrl } from './util'
 
@@ -27,7 +27,7 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
             }
             let r = fetch(url, { mode: 'cors' })
                 .then((response) => {
-                    console.log('HTTP Response:', response)
+                    // console.log('HTTP Response:', response)
                     if ((response) && (response.body) && (response.ok)) {
                         return response.body.getReader().read()
                     } else {
@@ -60,12 +60,8 @@ export default async function createDocFromMd(mdOptions, dstElement = null, tocE
                     if (bookInfo.express.convert_markdown === true) {
                         try {
                             bookInfo.chapters[i].html = await fetchData(bookInfo.chapters[i].file.replace(/\.[^/.]+$/, ".html"))
-                            console.log(bookInfo.chapters[i].html)
-                            console.log('Use HTML file...', bookInfo.chapters[i].file.replace(/\.[^/.]+$/, ".html"))
                         } catch (e) {
-                            console.log('Try to download Markdown file...', e)
                             bookInfo.chapters[i].src = await fetchData(bookInfo.chapters[i].file)
-                            console.log('Use Markdown file...')
                         }        
                     }
                 }
