@@ -117,7 +117,6 @@ export function createContextEval(options) {
             return iframeId
         },
         remove: (parent) => {
-            console.log('repl:remove child')
             parent.removeChild(iframe);
         },
         /**
@@ -127,11 +126,10 @@ export function createContextEval(options) {
          * @returns {Promise<unknown>}
          */
         run: (src, scope = {}, options = {}) => {
-            console.log('run:', options)
             return new Promise((resolve, reject) => {
                 // type: "module" | "AsyncFunction"
                 const handleMessage = (event) => {
-                    console.log('handleMessage:', event)
+                    // console.log('handleMessage:', event)
                     if (event.source !== iframe.contentWindow) {
                         return;
                     }
@@ -159,7 +157,6 @@ export function createContextEval(options) {
                     type: executionType,
                     extScript: options.extScript
                 }, src);
-                console.log('embedded:', options.embeddedElement)
                 if (options.embeddedElement) {
                     options.embeddedElement.appendChild(iframe);
                 } else {
@@ -182,7 +179,6 @@ export function createContextEval(options) {
                 } else if (executionType === "HTML") {
                     resolve()
                 }
-                console.log('run exit:')
             })
         }
     }

@@ -113,9 +113,7 @@ export class BookmarkManager {
 }
 
 function addBookmarkItem(page, scroll, bookmark) {
-    console.log('addBookmarkItem:', page)
     const list = document.getElementById('add-bookmark').querySelectorAll('.dropdown-item')
-    console.log('addBookmarkItem:', list)
     // insert bookmark item
     const li = document.createElement('li')
     const a = document.createElement('a')
@@ -132,11 +130,8 @@ function addBookmarkItem(page, scroll, bookmark) {
 
 export function buildBookmarkUI(bookmark) {
     const bookmarks = bookmark.getBookmark()
-    console.log('build:', bookmarks)
     if (bookmarks && ((typeof bookmarks) === 'object') && isIterable(bookmarks)) {
-        console.log('build:', bookmarks)
         for (const b of bookmarks) {
-            console.log('build:', b)
             const page = b.secPage
             const scroll = b.scroll
             addBookmarkItem(page, scroll, null)
@@ -170,9 +165,6 @@ export function addBokmarkHandler(targetElement, bookmark, clickElement) {
     }
     // FIXME: Can not scroll
     function setScroll(scroll) {
-        console.log('setScroll:', scroll)
-        console.log('setScroll:', targetElement)
-        console.log('setScroll:', window)
         let target = (targetElement || window)
         setTimeout(() => {
             window.scrollTo(0, scroll)
