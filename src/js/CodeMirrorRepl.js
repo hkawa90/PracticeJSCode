@@ -1,20 +1,15 @@
 // License: Unkown
 // https://github.com/azu/codemirror-console
 
-//import { createContextEval } from 'codemirror-console/lib/context-eval'
-// Webpack5 for yaml-front-matter https://qiita.com/issei_k/items/f33164a22b8c1dc74a09
-
 import { createContextEval } from './context-eval'
 import { EditorView, basicSetup } from "codemirror"
 import { EditorState, Compartment } from "@codemirror/state"
 import { javascript } from "@codemirror/lang-javascript"
 import { html } from "@codemirror/lang-html"
-// import { sublime } from '@uiw/codemirror-themes-all'
 import { sublimeInit } from '@uiw/codemirror-themes-all'
 import * as themes from '@uiw/codemirror-themes-all'
 import { repositionTooltips } from '@codemirror/view'
 import { DataSet, Timeline } from "vis-timeline/standalone";
-// import { loadFront } from "yaml-front-matter"
 import YMLfmt from 'fmt'
 import { genId } from './util'
 import { assertEvent } from './util'
@@ -123,9 +118,14 @@ export class CodeMirrorRepl {
         repl.element = element
         repl.element.setAttribute('id', repl.id())
         repl.editor.setText(element.textContent)
-        const config = repl.parseConfig().config
-        // repl.editor.getText()
-        repl.editor.setReadOnly(false)
+        const result = repl.parseConfig()
+        let  config = {}
+        try {
+            config = result.data.config    
+        } catch(_) {
+            config = {}
+        }
+         repl.editor.setReadOnly(false)
 
         repl.runBtn = document.createElement('button')
         repl.runBtn.setAttribute('class', 'runJsCode btn btn-primary me-3 mt-1')
@@ -319,7 +319,6 @@ export class CodeMirrorRepl {
             option.extScript = repl.options.extScript
 
             repl.runInContext({ console: consoleMock }, option).then(/*async*/(r) => {
-                console.log('runInContext:', option)
                 if (repl.vis_chkbox.checked) {
                     let groups = new DataSet();
                     let cnt = 0
@@ -341,14 +340,12 @@ export class CodeMirrorRepl {
                     const wait = async (ms) => {
                         return new Promise((resolve) => {
                             setTimeout(() => {
-                                console.log('wait success.')
                                 resolve(); // setTimeoutの第一引数の関数として簡略化できる
                             }, ms)
                         });
                     }
                     //await wait(10000)
                     const iframe = repl.iframeHolder.getElementsByTagName('iframe')[0]
-                    console.log("iframe id:", iframe.getAttribute('id'))
                     const height = iframe.contentDocument.body.clientHeight
                     if ((option.iframe) &&(option.iframe.height)) {
                         iframe.style.height = parseInt(option.iframe.height) + 'px'
@@ -359,7 +356,6 @@ export class CodeMirrorRepl {
                             setTimeout((iframe) => {
                                 const height = iframe.contentDocument.body.clientHeight
                                 const id = iframe.getAttribute('id')
-                                console.log('fire:iframe:', height, " id:", id)
                                 if (height !== 0) {
                                     iframe.style.height = height + 'px';
                                 }
@@ -373,7 +369,6 @@ export class CodeMirrorRepl {
             }).catch((e) => {
                 repl.outputHolder.appendChild(repl.appendConsoleLine(e, 'error'))
             })
-            console.log('runInContext out:')
         })
         // クリアボタン押下
         clrBtn.addEventListener('click', () => {
@@ -420,7 +415,6 @@ export class CodeMirrorRepl {
         this.runBtn.dispatchEvent(event)
     }
     clearConsole() {
-        console.log('clear console')
         if (this.outputHolder) {
             // this.outputHolderの子要素削除
             while (this.outputHolder.firstChild) {
@@ -444,7 +438,6 @@ export class CodeMirrorRepl {
         this.editor.setOption(op, value)
     }
     destroy() {
-        console.log('destory')
         this.editor = null
         if (this.runningEvalContext) {
             this.runningEvalContext.remove()
@@ -452,15 +445,19 @@ export class CodeMirrorRepl {
         Object.freeze(this)
     }
     parseConfig() {
-        let result = ""
+        let result = null
+        const input = this.editor.getText()
+        if (input === undefined || input === null || input === '') {
+            return {body : '', data: { config: {}}}
+        }
         try {
             // result = loadFront(this.editor.getText())
-            result = new YMLfmt({ quick: true, multiBlock: false }).parse(this.editor.getText())
+            result = new YMLfmt({ multiBlock: false }).parse(input)
         } catch (e) {
             assertEvent(document, 'assertion', e)
             console.log(e)
-        }       
-        return result
+        }
+        return result[0]
     }
     /**
      * @param {object} context
@@ -472,11 +469,20 @@ export class CodeMirrorRepl {
             this.runningEvalContext.remove(this.iframeHolder) // remove previous context at first
         }
 
-        const result = this.parseConfig()
-        let jsCode = result.body
-        delete result.body
-        // let jsCode = result.__content
-        // delete result.__content
+        let result = this.parseConfig()
+        let jsCode = ''
+        if (result !== null) {
+            jsCode = result.body
+            delete result.body
+            if (!result.hasOwnProperty('data')) {
+                result.data = {config: {}}
+            } else if (result.data === null) {
+                result.data = {config: {}}
+            }
+        } else {
+            result = {}
+            result.data = { config: null}
+        }
         if (result.data.config) {
             if (result.data.config.hasOwnProperty('timeline')) {
                 if (result.data.config.timeline) {
@@ -517,7 +523,6 @@ export class CodeMirrorRepl {
             if (result.data.config.hasOwnProperty('iframe')) {
                 options.iframe = result.data.config.iframe
             }
-            console.log(result.data.config)
             delete result.data.config
         }
         options.sandbox = options.sandbox || "allow-scripts allow-same-origin"
@@ -532,7 +537,7 @@ export class CodeMirrorRepl {
             }\n`
             jsCode = yfmOjbStr + jsCode
         } else if (options.type === 'module') {
-            const yfmObj = JSON.stringify(result)
+            const yfmObj = JSON.stringify(result.data)
             const yfmOjbStr =
                 `{
                 const ___yfmobj = JSON.parse('${yfmObj}')
