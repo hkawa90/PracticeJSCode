@@ -26,12 +26,8 @@
     "cmTheme-comment": "Codemirror theme name. default: sublime; See https://www.npmjs.com/package/@uiw/codemirror-themes-all",
     "chapters": [
         {
-            "file": "/1.md",
+            "file": "/README.md",
             "name": "README"
-        },
-        {
-            "file": "/Markdown_Example.md",
-            "name": "Markdown Example"
         },
         {
             "file": "/CodeRepl.md",
@@ -40,10 +36,6 @@
         {
             "file": "/Embedded.md",
             "name": "HideオプションによるChart表示"
-        },
-        {
-            "file": "/Test.md",
-            "name": "Mocha in the browser"
         },
         {
             "file": "/BlankPage.md",
