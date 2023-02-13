@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "analyze": "vite build --mode analyze"
+    "analyze": "vite build --mode analyze",
+    "docker:build" : "docker build . -f ./docker/Dockerfile -t practicejs",
+    "docker:run" : "docker run -p 49999:9999 -d practicejs"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
